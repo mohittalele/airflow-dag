@@ -20,7 +20,7 @@ releases:
             subPath: DAG
         logs:
           persistence:
-            enabled: false
+            enabled: true
             size: 10Gi
   - name: airflow-namespace                                            
     labels:                                  
