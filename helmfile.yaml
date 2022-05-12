@@ -11,8 +11,16 @@ releases:
     labels:                                  
       app: airflow
     chart: apache-airflow/airflow
+    needs:
+      - airflow-namespace
     values:
-      - dags:
+      - executor: KubernetesExecutor
+        # extraEnvFrom: 
+        #   - secretRef:
+        #       name: airflow-connections
+        #   - configMapRef:
+        #       name: airflow-variables
+        dags:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
@@ -22,10 +30,12 @@ releases:
           persistence:
             enabled: true
             size: 10Gi
+
   - name: airflow-namespace                                            
     labels:                                  
       app: airflow
     chart: incubator/raw
+    namespace: airflow
     values:
       - resources:
           - apiVersion: v1
