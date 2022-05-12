@@ -1,0 +1,36 @@
+repositories:
+
+- name:  apache-airflow
+  url: https://airflow.apache.org
+- name: incubator
+  url: https://charts.helm.sh/incubator
+
+releases:
+  - name: airflow                           
+    namespace: airflow                      
+    labels:                                  
+      app: airflow
+    chart: apache-airflow/airflow
+    values:
+      - dags:
+          gitSync:
+            enabled: true
+            repo: https://github.com/mohittalele/airflow-dag.git
+            branch: feature/airflow-tutorials
+            subPath: DAG
+        logs:
+          persistence:
+            enabled: false
+            size: 10Gi
+  - name: airflow-namespace                                            
+    labels:                                  
+      app: airflow
+    chart: incubator/raw
+    values:
+      - resources:
+          - apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: airflow
+
+
