@@ -57,16 +57,16 @@ with DAG(
 
     # [START extract_function]
     def extract(**kwargs):
-        ti = kwargs['ti']
+        data = kwargs['data']
         data_string = '{"1001": 301.27, "1002": 433.21, "1003": 502.22}'
-        ti.xcom_push('order_data', data_string)
+        data.xcom_push('order_data', data_string)
 
     # [END extract_function]
 
     # [START transform_function]
     def transform(**kwargs):
-        ti = kwargs['ti']
-        extract_data_string = ti.xcom_pull(task_ids='extract', key='order_data')
+        data = kwargs['data']
+        extract_data_string = data.xcom_pull(task_ids='extract', key='order_data')
         order_data = json.loads(extract_data_string)
 
         total_order_value = 0
@@ -75,14 +75,14 @@ with DAG(
 
         total_value = {"total_order_value": total_order_value}
         total_value_json_string = json.dumps(total_value)
-        ti.xcom_push('total_order_value', total_value_json_string)
+        data.xcom_push('total_order_value', total_value_json_string)
 
     # [END transform_function]
 
     # [START load_function]
     def load(**kwargs):
-        ti = kwargs['ti']
-        total_value_string = ti.xcom_pull(task_ids='transform', key='total_order_value')
+        data = kwargs['data']
+        total_value_string = data.xcom_pull(task_ids='transform', key='total_order_value')
         total_order_value = json.loads(total_value_string)
 
         print(total_order_value)
