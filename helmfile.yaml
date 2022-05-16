@@ -4,6 +4,10 @@ repositories:
   url: https://airflow.apache.org
 - name: incubator
   url: https://charts.helm.sh/incubator
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
+- name: minio
+  url: https://charts.min.io/
 
 releases:
   - name: airflow                           
@@ -11,6 +15,7 @@ releases:
     labels:                                  
       app: airflow
     chart: apache-airflow/airflow
+    version: 1.5.0
     needs:
       - airflow-namespace
     values:
@@ -43,4 +48,23 @@ releases:
             metadata:
               name: airflow
 
+  - name: rabbitmq
+    labels:                                  
+      app: rabbitmq
+    chart: bitnami/rabbitmq
+    version: 9.0.8
+    namespace: airflow
+    values:
+      - auth:
+          username: user
+          password: password
+
+  - name: minio
+    labels:                                  
+      app: minio
+    chart: minio/minio
+    version: 4.0.2
+    namespace: airflow
+    values:
+      - mode: standalone
 
