@@ -5,7 +5,10 @@ from time import sleep
 
 import pika
 credentials = pika.PlainCredentials('user', 'MbtnNcY7DXPMX0je')
-connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq',
+                                       5672,
+                                       '/',
+                                       credentials))
 channel = connection.channel()
 channel.queue_declare(queue='external_airflow_triggers', durable=True)
 
