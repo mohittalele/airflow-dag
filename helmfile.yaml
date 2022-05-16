@@ -54,10 +54,6 @@ releases:
     chart: bitnami/rabbitmq
     version: 9.0.8
     namespace: airflow
-    values:
-      - auth:
-          username: user
-          password: password
 
   - name: minio
     labels:                                  
@@ -67,4 +63,9 @@ releases:
     namespace: airflow
     values:
       - mode: standalone
+        persistence:
+          size: 5Gi
+        resources:
+          requests:
+            memory: 1Gi
 
