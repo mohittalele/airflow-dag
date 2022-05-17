@@ -1,6 +1,5 @@
 import json
 
-import pika
 from airflow import utils
 from airflow.models import DAG
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
@@ -18,6 +17,7 @@ dag = DAG(
 
 
 def consume_message(**kwargs):
+    import pika
     credentials = pika.PlainCredentials('user', 'MbtnNcY7DXPMX0je')
     connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq',
                                        5672,
