@@ -14,7 +14,7 @@ channel.queue_declare(queue='external_airflow_triggers', durable=True)
 
 tasks = ['hello_world_a', 'hello_world_b', 'hello_world_c']
 
-while True:
+for i in range(20):
     print('Producing messages at {}'.format(datetime.utcnow()))
     task_to_trigger = choice(tasks)
     event_time = str(datetime.utcnow())

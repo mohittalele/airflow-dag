@@ -86,14 +86,14 @@ releases:
                 = pika.PlainCredentials('user', 'MbtnNcY7DXPMX0je')\r\nconnection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq',\r\n
                 \                                      5672,\r\n                                       '/',\r\n
                 \                                      credentials))\r\nchannel = connection.channel()\r\nchannel.queue_declare(queue='external_airflow_triggers',
-                durable=True)\r\n\r\ntasks = ['hello_world_a', 'hello_world_b', 'hello_world_c']\r\n\r\nwhile
-                True:\r\n    print('Producing messages at {}'.format(datetime.utcnow()))\r\n    task_to_trigger
-                = choice(tasks)\r\n    event_time = str(datetime.utcnow())\r\n\r\n    message
-                = json.dumps(\r\n        {'task': task_to_trigger, 'params': {'event_time': event_time,
-                'value': randint(0, 10000)}}\r\n    )\r\n    channel.basic_publish(exchange='',
+                durable=True)\r\n\r\ntasks = ['hello_world_a', 'hello_world_b', 'hello_world_c']\r\n\r\nfor
+                i in range(20):\r\n    print('Producing messages at {}'.format(datetime.utcnow()))\r\n
+                \   task_to_trigger = choice(tasks)\r\n    event_time = str(datetime.utcnow())\r\n\r\n
+                \   message = json.dumps(\r\n        {'task': task_to_trigger, 'params': {'event_time':
+                event_time, 'value': randint(0, 10000)}}\r\n    )\r\n    channel.basic_publish(exchange='',
                 routing_key='external_airflow_triggers',\r\n                          body=message)\r\n
                 \   print(\" [x] Sent {}\".format(message))\r\n    sleep(2)\r\n\r\nconnection.close()"
-  
+              
   - name: message-producer
     labels:                                  
       app: message-producer
