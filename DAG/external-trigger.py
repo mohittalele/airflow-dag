@@ -47,47 +47,64 @@ router = BranchPythonOperator(
     depends_on_past=True
 )
 
-
 def trigger_dag_with_context(context, dag_run_obj):
+
     ti = context['task_instance']
     job_params = ti.xcom_pull(key='job_params', task_ids='router')
     dag_run_obj.payload = {'task_payload': job_params}
     return dag_run_obj
 
-
-task_a = trigger = TriggerDagRunOperator(
-    task_id='hello_world_a',
-    trigger_dag_id="hello_world_a",
-    python_callable=trigger_dag_with_context,
-    params={'condition_param': True, 'task_payload': '{}'},
-    dag=dag,
-    provide_context=True,
-)
-
-task_b = TriggerDagRunOperator(
-    task_id='hello_world_b',
-    trigger_dag_id="hello_world_b",
-    python_callable=trigger_dag_with_context,
-    params={'condition_param': True, 'task_payload': '{}'},
-    dag=dag,
-    provide_context=True,
-)
-
-task_c = TriggerDagRunOperator(
-    task_id='hello_world_c',
-    trigger_dag_id="hello_world_c",
-    python_callable=trigger_dag_with_context,
-    params={'task_payload': '{}'},
-    dag=dag,
-    provide_context=True,
-)
+#
+# def group(number, **kwargs):
+#     # load the values if needed in the command you plan to execute
+#     dyn_value = "{{ task_instance.xcom_pull(task_ids='push_func') }}"
+#     return TriggerDagRunOperator(
+#         trigger_dag_id='JOB_NAME_{}'.format(number),
+#         bash_command='script.sh {} {}'.format(dyn_value, number),
+#         dag=dag)
+#
+#
+# task_a = trigger = TriggerDagRunOperator(
+#     task_id='item',
+#     trigger_dag_id="item",
+#     dag=dag
+#     conf={}
+# )
+#
+#
+# task_a = trigger = TriggerDagRunOperator(
+#     task_id='hello_world_a',
+#     trigger_dag_id="hello_world_a",
+#     python_callable=trigger_dag_with_context,
+#     params={'condition_param': True, 'task_payload': '{}'},
+#     dag=dag,
+#     provide_context=True,
+# )
+#
+# task_b = TriggerDagRunOperator(
+#     task_id='hello_world_b',
+#     trigger_dag_id="hello_world_b",
+#     python_callable=trigger_dag_with_context,
+#     params={'condition_param': True, 'task_payload': '{}'},
+#     dag=dag,
+#     provide_context=True,
+# )
+#
+# task_c = TriggerDagRunOperator(
+#     task_id='hello_world_c',
+#     trigger_dag_id="hello_world_c",
+#     python_callable=trigger_dag_with_context,
+#     params={'task_payload': '{}'},
+#     dag=dag,
+#     provide_context=True,
+# )
 
 task_trash = DummyOperator(
     task_id='task_trash',
     dag=dag
 )
 
-router >> task_a
-router >> task_b
-router >> task_c
+# router >> task_a
+# router >> task_b
+# router >> task_c
 router >> task_trash
