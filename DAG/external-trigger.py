@@ -4,7 +4,7 @@ from airflow import utils
 from airflow.models import DAG
 # from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import BranchPythonOperator
 
 dag = DAG(
@@ -82,7 +82,7 @@ task_c = TriggerDagRunOperator(
     provide_context=True,
 )
 
-task_trash = EmptyOperator(
+task_trash = DummyOperator(
     task_id='task_trash',
     dag=dag
 )
