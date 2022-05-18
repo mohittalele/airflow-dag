@@ -90,6 +90,7 @@ with DAG(
 
     task_a = TriggerDagRunOperator(
         # trigger_run_id="test_trigger_dagrun",
+        task_id='task_a',
         trigger_dag_id="hello_world_a",
         # conf={'message': '{{ dag_run.conf.get("message") }}'},
         conf={
@@ -98,6 +99,7 @@ with DAG(
     )
     task_b = TriggerDagRunOperator(
         # task_id="test_trigger_dagrun",
+        task_id='task_b',
         trigger_dag_id="hello_world_b",
         conf={
             "job_params":
@@ -105,6 +107,7 @@ with DAG(
     )
     task_c = TriggerDagRunOperator(
         # task_id="test_trigger_dagrun",
+        task_id='task_c',
         trigger_dag_id="hello_world_c",
         conf={
             "job_params":
