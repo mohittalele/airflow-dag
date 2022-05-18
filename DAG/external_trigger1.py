@@ -114,10 +114,7 @@ with DAG(
             "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
     )
 
-    router >> task_a
-    router >> task_b
-    router >> task_c
-    router >> task_trash
+    router >> [task_a, task_b, task_c, task_trash]
 
     # empty_task_1 = EmptyOperator(task_id='empty_task_1')
     # empty_task_2 = EmptyOperator(task_id='empty_task_2')
