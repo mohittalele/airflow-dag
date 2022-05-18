@@ -2,9 +2,10 @@ import json
 
 from airflow import utils
 from airflow.models import DAG
-from airflow.operators.dagrun_operator import TriggerDagRunOperator
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import BranchPythonOperator
+# from airflow.operators.dagrun_operator import TriggerDagRunOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.operators.empty import EmptyOperator
+from airflow.operators.python import BranchPythonOperator
 
 dag = DAG(
     dag_id='external_trigger',
@@ -81,7 +82,7 @@ task_c = TriggerDagRunOperator(
     provide_context=True,
 )
 
-task_trash = DummyOperator(
+task_trash = EmptyOperator(
     task_id='task_trash',
     dag=dag
 )
