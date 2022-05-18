@@ -25,6 +25,7 @@ import json
 from airflow import DAG
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import BranchPythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow import utils
 
 def should_run(**kwargs):
@@ -86,7 +87,36 @@ with DAG(
     )
 
     task_trash = DummyOperator(task_id='task_trash')
+
+    task_a = TriggerDagRunOperator(
+        # trigger_run_id="test_trigger_dagrun",
+        trigger_dag_id="hello_world_a",
+        # conf={'message': '{{ dag_run.conf.get("message") }}'},
+        conf={
+            "job_params":
+            "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
+    )
+    task_b = TriggerDagRunOperator(
+        # task_id="test_trigger_dagrun",
+        trigger_dag_id="hello_world_b",
+        conf={
+            "job_params":
+            "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
+    )
+    task_c = TriggerDagRunOperator(
+        # task_id="test_trigger_dagrun",
+        trigger_dag_id="hello_world_c",
+        conf={
+            "job_params":
+            "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
+    )
+
+    router >> task_a
+    router >> task_b
+    router >> task_c
+    router >> task_trash
+
     # empty_task_1 = EmptyOperator(task_id='empty_task_1')
     # empty_task_2 = EmptyOperator(task_id='empty_task_2')
     # cond >> [empty_task_1, empty_task_2]
-    router >> task_trash
+

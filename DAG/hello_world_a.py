@@ -1,23 +1,23 @@
 import airflow
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-
-dag = DAG(
-    dag_id='hello_world_a',
-    default_args={
-        "owner": "airflow",
-        'start_date': airflow.utils.dates.days_ago(1),
-    },
-    schedule_interval=None
-)
+from airflow.operators.python import PythonOperator
 
 
-def print_hello(**context):
-    task_params = context['dag_run'].conf['task_payload']
-    print('Hello world a with {}'.format(task_params))
+def print_hello(dag_run=None):
+    # task_params = context['dag_run'].conf['task_payload']
+    print(f"Remotely received value of {dag_run.conf.get('job_params')} for key=job_params")
+    # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
 
-PythonOperator(
-    task_id='hello_world_printer',
-    python_callable=print_hello,
-    provide_context=True,
-    dag=dag)
+
+with DAG(
+        dag_id='hello_world_a',
+        default_args={
+            "owner": "airflow",
+            'start_date': airflow.utils.dates.days_ago(1),
+        },
+        schedule_interval=None
+) as dag:
+    PythonOperator(
+        task_id='hello_world_printer',
+        python_callable=print_hello
+    )
