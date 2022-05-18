@@ -18,6 +18,8 @@ dag = DAG(
 
 
 def consume_message(**kwargs):
+    import subprocess
+    subprocess.run(["pip", "install", "pika"])
     import pika
     credentials = pika.PlainCredentials('user', 'MbtnNcY7DXPMX0je')
     connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq',
