@@ -21,9 +21,9 @@ def consume_message(**kwargs):
     import pika
     credentials = pika.PlainCredentials('user', 'MbtnNcY7DXPMX0je')
     connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq',
-                                       5672,
-                                       '/',
-                                       credentials))
+                                                                   5672,
+                                                                   '/',
+                                                                   credentials))
     channel = connection.channel()
     channel.queue_declare(queue='external_airflow_triggers', durable=True)
 
