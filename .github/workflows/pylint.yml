@@ -24,4 +24,4 @@ jobs:
         pip install pylint apache-airflow pendulum
     - name: Analysing the code with pylint
       run: |
-        pylint --fail-under=6 $(git ls-files '*.py')
+        pylint --fail-under=4 $(git ls-files '*.py')
