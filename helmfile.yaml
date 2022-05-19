@@ -1,0 +1,131 @@
+repositories:
+
+- name:  apache-airflow
+  url: https://airflow.apache.org
+- name: incubator
+  url: https://charts.helm.sh/incubator
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
+- name: minio
+  url: https://charts.min.io/
+
+releases:
+  - name: airflow                           
+    namespace: airflow                      
+    labels:                                  
+      app: airflow
+    chart: apache-airflow/airflow
+    version: 1.5.0
+    needs:
+      - airflow-namespace
+    values:
+      - executor: KubernetesExecutor
+        # extraEnvFrom: 
+        #   - secretRef:
+        #       name: airflow-connections
+        #   - configMapRef:
+        #       name: airflow-variables
+        dags:
+          gitSync:
+            enabled: true
+            repo: https://github.com/mohittalele/airflow-dag.git
+            branch: feature/airflow-tutorials
+            subPath: DAG
+        logs:
+          persistence:
+            enabled: true
+            size: 10Gi
+
+  - name: airflow-namespace                                            
+    labels:                                  
+      app: airflow
+    chart: incubator/raw
+    namespace: airflow
+    values:
+      - resources:
+          - apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: airflow
+
+  - name: rabbitmq
+    labels:                                  
+      app: rabbitmq
+    chart: bitnami/rabbitmq
+    version: 9.0.8
+    namespace: airflow
+
+  - name: minio
+    labels:                                  
+      app: minio
+    chart: minio/minio
+    version: 4.0.2
+    namespace: airflow
+    values:
+      - mode: standalone
+        persistence:
+          size: 5Gi
+        resources:
+          requests:
+            memory: 1Gi
+
+  - name: message-producer-configmap
+    labels:                                  
+      app: message-producer-configmap
+    chart: incubator/raw
+    namespace: airflow
+    values:
+      - resources:
+          - apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: message-producer-configmap
+            data:
+              message-producer.py: "import json\r\nfrom datetime import datetime\r\nfrom random
+                import randint, choice\r\nfrom time import sleep\r\n\r\nimport pika\r\ncredentials
+                = pika.PlainCredentials('user', 'MbtnNcY7DXPMX0je')\r\nconnection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq',\r\n
+                \                                      5672,\r\n                                       '/',\r\n
+                \                                      credentials))\r\nchannel = connection.channel()\r\nchannel.queue_declare(queue='external_airflow_triggers',
+                durable=True)\r\n\r\ntasks = ['hello_world_a', 'hello_world_b', 'hello_world_c']\r\n\r\nfor
+                i in range(20):\r\n    print('Producing messages at {}'.format(datetime.utcnow()))\r\n
+                \   task_to_trigger = choice(tasks)\r\n    event_time = str(datetime.utcnow())\r\n\r\n
+                \   message = json.dumps(\r\n        {'task': task_to_trigger, 'params': {'event_time':
+                event_time, 'value': randint(0, 10000)}}\r\n    )\r\n    channel.basic_publish(exchange='',
+                routing_key='external_airflow_triggers',\r\n                          body=message)\r\n
+                \   print(\" [x] Sent {}\".format(message))\r\n    sleep(2)\r\n\r\nconnection.close()"
+              
+  - name: message-producer
+    labels:                                  
+      app: message-producer
+    chart: incubator/raw
+    namespace: airflow
+    values:
+      - resources:
+          - apiVersion: batch/v1
+            kind: Job
+            metadata:
+              name: message-producer
+            spec:
+              template:
+                spec:
+                  containers:
+                  - name: message-producer
+                    image: python:3.9
+                    command:
+                    - /bin/sh
+                    - -c
+                    - |
+                      pip install --upgrade pip 
+                      pip install pika
+                      python /tmp/message-producer.py
+                    volumeMounts:
+                      - name: config-volume
+                        mountPath: /tmp/
+                  volumes:
+                    - name: config-volume
+                      configMap:
+                        name: message-producer-configmap     
+                  restartPolicy: Never
+              backoffLimit: 4
+
+
