@@ -68,6 +68,17 @@ releases:
         resources:
           requests:
             memory: 1Gi
+        environment:
+          MINIO_NOTIFY_AMQP_ENABLE_2 : "on"
+          MINIO_NOTIFY_AMQP_URL_2 : "amqp://user:MbtnNcY7DXPMX0je@rabbitmq:5672"
+          MINIO_NOTIFY_AMQP_EXCHANGE_2 : "airflowDagEvents"
+          MINIO_NOTIFY_AMQP_EXCHANGE_TYPE_2 : "fanout"
+          MINIO_NOTIFY_AMQP_ROUTING_KEY_2 : "dagBucketEvents"
+          MINIO_NOTIFY_AMQP_DURABLE_2 : "on"
+          MINIO_NOTIFY_AMQP_AUTO_DELETED_2 : "off"
+          MINIO_NOTIFY_AMQP_INTERNAL_2 : "off"
+          MINIO_NOTIFY_AMQP_NO_WAIT_2 : "off"
+          MINIO_NOTIFY_AMQP_MANDATORY_2 : "off"
 
   - name: message-producer-configmap
     labels:                                  
