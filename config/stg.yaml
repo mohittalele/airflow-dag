@@ -1,0 +1,5 @@
+db:
+  env: staging
+  driver: ${db.env}_mysql
+  user: ${db.env}_omry
+  password: ${db.env}_secret
