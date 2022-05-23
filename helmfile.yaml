@@ -112,3 +112,22 @@ releases:
               backoffLimit: 4
 
 
+
+  - name: ubuntu-workspace
+    labels:                                  
+      app: ubuntu
+    chart: incubator/raw
+    namespace: airflow
+    values: 
+      - resources:
+        - apiVersion: v1
+          kind: Pod
+          metadata:
+            name: ubuntu
+          spec:
+            containers:
+            - name: ubuntu
+              image: ubuntu:latest
+              # Just spin & wait forever
+              command: [ "/bin/bash", "-c", "--" ]
+              args: [ "while true; do sleep 30; done;" ]
