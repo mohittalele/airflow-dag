@@ -160,6 +160,8 @@ releases:
                   mountPath: /opt/
                 - name: dag-folder
                   mountPath: /opt/airflow/dags
+                - name: env-folder
+                  mountPath: /opt/airflow
             volumes:
               - name: local-airflow
                 hostPath:
@@ -167,3 +169,6 @@ releases:
               - name: dag-folder
                 hostPath:
                   path: /host/Documents/MLOps/airflow-dag/DAG
+              - name: env-folder
+                hostPath:
+                  path: /host/Documents/MLOps/airflow-dag/environments

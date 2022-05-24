@@ -24,7 +24,7 @@ from omegaconf import DictConfig, OmegaConf
 import hydra
 
 
-@hydra.main(version_base=None, config_path=".", config_name="prod")
+@hydra.main(version_base=None, config_path="environments/", config_name="dev")
 def my_app(cfg):
     print(OmegaConf.to_yaml(cfg))
     print("db.user :", cfg.db.user)
