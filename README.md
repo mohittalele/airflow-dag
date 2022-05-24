@@ -49,3 +49,10 @@ clean_task = BashOperator(task_id='cleandata_task',
                           dag=cleandata_dag)
 ```
 
+# Building docer images 
+
+```docker build -t airflow:2.2.4v1 . ``` 
+
+``` docker tag airflow:2.2.4v1  mohittalele/airflow:2.2.4v1 ```
+
+``` docker push mohittalele/airflow:2.2.4v1  ```

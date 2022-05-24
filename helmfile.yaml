@@ -16,8 +16,6 @@ releases:
       app: airflow
     chart: apache-airflow/airflow
     version: 1.5.0
-    needs:
-      - airflow-namespace
     values:
       - # executor: KubernetesExecutor
         # extraEnvFrom: 
