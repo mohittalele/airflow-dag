@@ -4,10 +4,15 @@ from airflow.decorators import dag, task
 import pendulum
 
 
-@dag(schedule_interval='None', start_date=pendulum.datetime(2021, 1, 1, tz="UTC"), catchup=False)
+@dag(
+    dag_id="hydra_trials",
+    schedule_interval=None,
+    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+    catchup=False)
 def dag():
+
+    # @hydra.main(version_base=None, config_path="../config", config_name="prod")
     @task(task_id="print_config")
-    @hydra.main(version_base=None, config_path="../config", config_name="prod")
     def print_config(cfg):
 
         print(OmegaConf.to_yaml(cfg))
@@ -16,7 +21,7 @@ def dag():
         print("db.password :", cfg.db.user)
 
 
-dag = dag()
+hydra_trials = dag()
 
 # from omegaconf import DictConfig, OmegaConf
 # import hydra

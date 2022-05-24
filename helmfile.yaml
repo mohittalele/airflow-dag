@@ -29,7 +29,7 @@ releases:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
-            branch: feature/airflow-tutorials
+            branch: feature/test-hydra
             subPath: DAG
         logs:
           persistence:
