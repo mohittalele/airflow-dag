@@ -13,11 +13,6 @@ def dag():
     @hydra.main(version_base=None, config_path="../environments", config_name="prod")
     @task(task_id="print_config")
     def print_config(cfg):
-        import subprocess
-        subprocess.run(["pip", "install", "omegaconf"])
-        from omegaconf import OmegaConf
-        print(OmegaConf.to_yaml(cfg))
-        print(OmegaConf.to_yaml(cfg))
         print("db.user :", cfg.db.user)
         print("db.password :", cfg.db.user)
 
