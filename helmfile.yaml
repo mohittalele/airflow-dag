@@ -122,11 +122,9 @@ releases:
                   restartPolicy: Never
               backoffLimit: 4
 
-
-
-  - name: ubuntu-workspace
+  - name: develop-workspace
     labels:                                  
-      app: ubuntu
+      app: develop-workspace
     chart: incubator/raw
     namespace: airflow
     values: 
@@ -134,7 +132,7 @@ releases:
         - apiVersion: v1
           kind: Pod
           metadata:
-            name: ubuntu
+            name: dev-workspace
           spec:
             containers:
             - name: ubuntu
@@ -142,3 +140,30 @@ releases:
               # Just spin & wait forever
               command: [ "/bin/bash", "-c", "--" ]
               args: [ "while true; do sleep 30; done;" ]
+            - name: airflow
+              image: apache/airflow:2.2.4
+              # Just spin & wait forever
+              command:
+                - sh
+                - -c
+                - |
+                  apt-get update ;
+                  apt install vi ;
+                  pip install hydra-core --upgrade ;
+                  airflow db init ;
+                  while true; 
+                    do sleep 30; 
+                  done;
+              args: [ "apt-get update ; airflow db init ; while true; do sleep 30; done;" ]
+              volumeMounts:
+                - name: local-airflow
+                  mountPath: /opt/
+                - name: dag-folder
+                  mountPath: /opt/airflow/dags
+            volumes:
+              - name: local-airflow
+                hostPath:
+                  path: /host/Documents/MLOps/airflow-dag
+              - name: dag-folder
+                hostPath:
+                  path: /host/Documents/MLOps/airflow-dag/DAG
