@@ -11,7 +11,7 @@ import pendulum
     catchup=False)
 def dag():
 
-    # @hydra.main(version_base=None, config_path="../config", config_name="prod")
+    @hydra.main(version_base=None, config_path="../config", config_name="prod")
     @task(task_id="print_config")
     def print_config(cfg):
 
@@ -20,6 +20,7 @@ def dag():
         print("db.user :", cfg.db.user)
         print("db.password :", cfg.db.user)
 
+    print_config_instance = print_config()
 
 hydra_trials = dag()
 
