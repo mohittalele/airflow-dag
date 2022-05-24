@@ -19,12 +19,17 @@ releases:
     needs:
       - airflow-namespace
     values:
-      - executor: KubernetesExecutor
+      - # executor: KubernetesExecutor
         # extraEnvFrom: 
         #   - secretRef:
         #       name: airflow-connections
         #   - configMapRef:
         #       name: airflow-variables
+        defaultAirflowRepository: mohittalele/airflow
+
+        # Default airflow tag to deploy
+        defaultAirflowTag: "2.2.4v1"
+        airflowVersion: "2.2.4"
         dags:
           gitSync:
             enabled: true
@@ -38,7 +43,7 @@ releases:
 
   - name: airflow-namespace                                            
     labels:                                  
-      app: airflow
+      app: airflow-namespace
     chart: incubator/raw
     namespace: airflow
     values:
@@ -155,20 +160,20 @@ releases:
                     do sleep 30; 
                   done;
               args: [ "apt-get update ; airflow db init ; while true; do sleep 30; done;" ]
-              volumeMounts:
-                - name: local-airflow
-                  mountPath: /opt/
-                - name: dag-folder
-                  mountPath: /opt/airflow/dags
-                - name: env-folder
-                  mountPath: /opt/airflow
-            volumes:
-              - name: local-airflow
-                hostPath:
-                  path: /host/Documents/MLOps/airflow-dag
-              - name: dag-folder
-                hostPath:
-                  path: /host/Documents/MLOps/airflow-dag/DAG
-              - name: env-folder
-                hostPath:
-                  path: /host/Documents/MLOps/airflow-dag/environments
+#              volumeMounts:
+#                - name: local-airflow
+#                  mountPath: /opt/
+#                - name: dag-folder
+#                  mountPath: /opt/airflow/dags
+#                - name: env-folder
+#                  mountPath: /opt/airflow
+#            volumes:
+#              - name: local-airflow
+#                hostPath:
+#                  path: /host/Documents/MLOps/airflow-dag
+#              - name: dag-folder
+#                hostPath:
+#                  path: /host/Documents/MLOps/airflow-dag/DAG
+#              - name: env-folder
+#                hostPath:
+#                  path: /host/Documents/MLOps/airflow-dag/environments
