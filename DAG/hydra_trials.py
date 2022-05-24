@@ -1,4 +1,3 @@
-from omegaconf import OmegaConf
 import hydra
 from airflow.decorators import dag, task
 import pendulum
@@ -11,10 +10,10 @@ import pendulum
     catchup=False)
 def dag():
 
-    @hydra.main(version_base=None, config_path="../config", config_name="prod")
+    @hydra.main(version_base=None, config_path="../environments", config_name="prod")
     @task(task_id="print_config")
     def print_config(cfg):
-
+        from omegaconf import OmegaConf
         print(OmegaConf.to_yaml(cfg))
         print(OmegaConf.to_yaml(cfg))
         print("db.user :", cfg.db.user)
