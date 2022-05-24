@@ -8,6 +8,7 @@ from airflow.operators.email import EmailOperator
 from airflow.utils.context import Context
 import hydra
 
+
 class GetRequestOperator(BaseOperator):
     """Custom operator to send GET request to provided url"""
 
