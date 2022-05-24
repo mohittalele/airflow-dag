@@ -2,7 +2,6 @@ from typing import Any, Dict
 
 import httpx
 import pendulum
-import hydra
 from airflow.decorators import dag, task
 from airflow.models.baseoperator import BaseOperator
 from airflow.operators.email import EmailOperator
@@ -35,6 +34,7 @@ def example_dag_decorator(email: str = 'example@example.com'):
     """
     get_ip = GetRequestOperator(task_id='get_ip', url="http://httpbin.org/get")
 
+    @hydra.main(version_base=None, config_path="environments/", config_name="dev")
     @task(multiple_outputs=True)
     def prepare_email(raw_json: Dict[str, Any]) -> Dict[str, str]:
         external_ip = raw_json['origin']
