@@ -25,7 +25,7 @@ import hydra
 
 
 @hydra.main(version_base=None, config_path="environments/", config_name="dev")
-def my_app(cfg):
+def my_app(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg))
     print("db.user :", cfg.db.user)
     print("db.password :", cfg.db.user)
