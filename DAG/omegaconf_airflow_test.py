@@ -79,7 +79,26 @@ with DAG(
 
         pprint(kwargs)
         print(ds)
-        return 'This is third task'
+        return omega_cfg_3
+
+    @task(task_id="forth_task_omegaconf_test")
+    def third_task_omegaconf_test(ds=None, **kwargs):
+        """Print the Airflow context and ds variable from the context."""
+        omega_cfg_3 = OmegaConf.load(CONFIG_PATH_1)
+        print("4rd task")
+        print("CONFIG_PATH :", CONFIG_PATH)
+        print("CONFIG_PATH_1 :", CONFIG_PATH_1)
+
+        print("------- omegaconf---------------")
+        print(OmegaConf.to_yaml(omega_cfg_3))
+        print("db.user :", omega_cfg_3.db.user)
+        print("db.password :", omega_cfg_3.db.password)
+        print("db.driver :", omega_cfg_3.db.driver)
+        print("------- omegaconf---------------")
+
+        pprint(kwargs)
+        print(ds)
+        return omega_cfg_3
 
     print_context_instance = omegaconf_test()
     second_task_omegaconf_test_instance = second_task_omegaconf_test()
