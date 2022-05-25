@@ -25,7 +25,7 @@ with DAG(
 
     @task(task_id="print_the_context")
     @hydra.main(version_base=None, config_path=CONFIG_PATH, config_name="dev")
-    def print_context(ds=None, **kwargs):
+    def print_context(cfg, ds=None, **kwargs):
         """Print the Airflow context and ds variable from the context."""
         CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments'))
         print("CONFIG_PATH :", CONFIG_PATH)
