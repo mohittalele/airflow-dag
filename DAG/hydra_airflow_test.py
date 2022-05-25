@@ -37,6 +37,12 @@ def example_dag_decorator(email: str = 'example@example.com'):
     get_ip = GetRequestOperator(task_id='get_ip', url="http://httpbin.org/get")
 
     @hydra.main(version_base=None, config_path="environments/", config_name="dev")
+    def get_conf(cfg: DictConfig) -> DictConfig:
+        print(OmegaConf.to_yaml(cfg))
+        print("db.user :", cfg.db.user)
+        print("db.password :", cfg.db.user)
+        return cfg
+
     @task(multiple_outputs=True)
     def prepare_email(raw_json: Dict[str, Any], cfg: DictConfig) -> Dict[str, str]:
         external_ip = raw_json['origin']
@@ -48,7 +54,7 @@ def example_dag_decorator(email: str = 'example@example.com'):
             'body': f'Seems like today your server executing Airflow is connected from IP {external_ip}<br>',
         }
 
-    email_info = prepare_email(get_ip.output)
+    email_info = prepare_email(get_ip.output, get_conf.output)
 
     EmailOperator(
         task_id='send_email', to=email, subject=email_info['subject'], html_content=email_info['body']
