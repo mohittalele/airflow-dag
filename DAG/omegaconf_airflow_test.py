@@ -7,6 +7,7 @@ import os
 import hydra
 from omegaconf import OmegaConf
 from airflow.models import Variable
+
 log = logging.getLogger(__name__)
 
 with DAG(
@@ -26,7 +27,7 @@ with DAG(
 
 
     @task(task_id="omegaconf_test")
-    def print_context(ds=None, **kwargs):
+    def omegaconf_test(ds=None, **kwargs):
         """Print the Airflow context and ds variable from the context."""
 
         print("CONFIG_PATH :", CONFIG_PATH)
@@ -61,5 +62,7 @@ with DAG(
         print(ds)
         return 'This is second task'
 
-    print_context_instance = print_context()
+
+    print_context_instance = omegaconf_test()
     second_task_omegaconf_test_instance = second_task_omegaconf_test()
+    print_context_instance >> second_task_omegaconf_test_instance
