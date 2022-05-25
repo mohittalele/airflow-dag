@@ -1,0 +1,7 @@
+FROM python:3.9
+RUN python -m ensurepip --upgrade
+RUN pip install hydra-core --upgrade
+RUN apt-get update && apt-get install -y \
+    git \
+    vim \
+    && rm -rf /var/lib/apt/lists/*

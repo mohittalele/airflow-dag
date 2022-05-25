@@ -139,7 +139,7 @@ releases:
           spec:
             containers:
             - name: ubuntu
-              image: ubuntu:latest
+              image: mohittalele/ubuntu_util:0.0.1
               # Just spin & wait forever
               command: [ "/bin/bash", "-c", "--" ]
               args: [ "while true; do sleep 30; done;" ]
@@ -157,7 +157,7 @@ releases:
                   while true; 
                     do sleep 30; 
                   done;
-              args: [ "apt-get update ; airflow db init ; while true; do sleep 30; done;" ]
+              args: [ "apt-get update ; while true; do sleep 30; done;" ]
 #              volumeMounts:
 #                - name: local-airflow
 #                  mountPath: /opt/
