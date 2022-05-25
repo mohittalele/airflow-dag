@@ -43,6 +43,8 @@ def example_dag_decorator(email: str = 'example@example.com'):
         print("db.password :", cfg.db.user)
         return cfg
 
+    get_conf_instance = get_conf()
+
     @task(multiple_outputs=True)
     def prepare_email(raw_json: Dict[str, Any], cfg: DictConfig) -> Dict[str, str]:
         external_ip = raw_json['origin']
@@ -54,7 +56,7 @@ def example_dag_decorator(email: str = 'example@example.com'):
             'body': f'Seems like today your server executing Airflow is connected from IP {external_ip}<br>',
         }
 
-    email_info = prepare_email(get_ip.output, get_conf.output)
+    email_info = prepare_email(get_ip.output, get_conf_instance.output)
 
     EmailOperator(
         task_id='send_email', to=email, subject=email_info['subject'], html_content=email_info['body']
