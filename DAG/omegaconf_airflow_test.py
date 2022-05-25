@@ -63,4 +63,3 @@ with DAG(
 
     print_context_instance = print_context()
     second_task_omegaconf_test_instance = second_task_omegaconf_test()
-    print_context_instance >> second_task_omegaconf_test_instance
