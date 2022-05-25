@@ -7,6 +7,7 @@ from airflow.models.baseoperator import BaseOperator
 from airflow.operators.email import EmailOperator
 from airflow.utils.context import Context
 import hydra
+from omegaconf import DictConfig, OmegaConf
 
 
 class GetRequestOperator(BaseOperator):
@@ -37,8 +38,11 @@ def example_dag_decorator(email: str = 'example@example.com'):
 
     @hydra.main(version_base=None, config_path="environments/", config_name="dev")
     @task(multiple_outputs=True)
-    def prepare_email(raw_json: Dict[str, Any]) -> Dict[str, str]:
+    def prepare_email(raw_json: Dict[str, Any], cfg: DictConfig) -> Dict[str, str]:
         external_ip = raw_json['origin']
+        print(OmegaConf.to_yaml(cfg))
+        print("db.user :", cfg.db.user)
+        print("db.password :", cfg.db.user)
         return {
             'subject': f'Server connected from {external_ip}',
             'body': f'Seems like today your server executing Airflow is connected from IP {external_ip}<br>',
