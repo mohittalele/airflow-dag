@@ -25,7 +25,10 @@ import hydra
 import os
 
 CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments'))
-print("config_path:", CONFIG_PATH)
+print("CONFIG_PATH :", CONFIG_PATH)
+env = 'prod.yaml'
+CONFIG_PATH_1 = os.path.abspath(os.path.join(__file__, '..', 'environments/', env))
+print("NEW CONFIG_PATH", CONFIG_PATH_1)
 
 
 @hydra.main(version_base=None, config_path=CONFIG_PATH, config_name="dev")
@@ -34,7 +37,13 @@ def my_app(cfg: DictConfig):
     OmegaConf.save(config=cfg, f='cfg.yaml')
     print(OmegaConf)
     print("db.user :", cfg.db.user)
-    print("db.password :", cfg.db.user)
+    print("db.password :", cfg.db.password)
+
+    print("------- omegaconf---------------")
+    omega_cfg_1 = OmegaConf.load(CONFIG_PATH_1)
+    print(OmegaConf.to_yaml(omega_cfg_1))
+    print("db.user :", omega_cfg_1.db.user)
+    print("db.password :", omega_cfg_1.db.password)
 
 
 if __name__ == "__main__":
