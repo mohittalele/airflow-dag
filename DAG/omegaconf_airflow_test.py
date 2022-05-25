@@ -28,7 +28,7 @@ with DAG(
     print("NEW CONFIG_PATH", CONFIG_PATH_1)
 
 
-    @task(task_id="print_the_context")
+    @task(task_id="omegaconf_airflow_test")
     def print_context( ds=None, **kwargs):
         """Print the Airflow context and ds variable from the context."""
 
@@ -46,7 +46,7 @@ with DAG(
         print("------- omegaconf---------------")
         pprint(kwargs)
         print(ds)
-        return 'Whatever you return gets printed in the logs'
+        return omega_cfg_1
 
 
     run_this = print_context()
