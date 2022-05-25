@@ -22,11 +22,17 @@
 
 from omegaconf import DictConfig, OmegaConf
 import hydra
+import os
+
+CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments'))
+print("config_path:", CONFIG_PATH)
 
 
-@hydra.main(version_base=None, config_path="environments/", config_name="dev")
+@hydra.main(version_base=None, config_path=CONFIG_PATH, config_name="dev")
 def my_app(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg))
+    OmegaConf.save(config=cfg, f='cfg.yaml')
+    print(OmegaConf)
     print("db.user :", cfg.db.user)
     print("db.password :", cfg.db.user)
 
