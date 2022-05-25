@@ -1,10 +1,6 @@
 import logging
-import shutil
-import time
 from pprint import pprint
-
 import pendulum
-
 from airflow import DAG
 from airflow.decorators import task
 import os
@@ -28,6 +24,7 @@ with DAG(
     print("NEW CONFIG_PATH", CONFIG_PATH_1)
     omega_cfg_1 = OmegaConf.load(CONFIG_PATH_1)
 
+
     @task(task_id="omegaconf_test")
     def print_context(ds=None, **kwargs):
         """Print the Airflow context and ds variable from the context."""
@@ -36,17 +33,34 @@ with DAG(
         print("CONFIG_PATH_1 :", CONFIG_PATH_1)
 
         print("------- omegaconf---------------")
-
         print(OmegaConf.to_yaml(omega_cfg_1))
         print("db.user :", omega_cfg_1.db.user)
         print("db.password :", omega_cfg_1.db.password)
         print("------- omegaconf---------------")
 
-        print("current work dir :", os.getcwd())
-        print("------- omegaconf---------------")
         pprint(kwargs)
         print(ds)
         return 'Whatever you return gets printed in the logs'
 
 
-    run_this = print_context()
+    @task(task_id="second_task_omegaconf_test")
+    def second_task_omegaconf_test(ds=None, **kwargs):
+        """Print the Airflow context and ds variable from the context."""
+
+        print("CONFIG_PATH :", CONFIG_PATH)
+        print("CONFIG_PATH_1 :", CONFIG_PATH_1)
+
+        print("------- omegaconf---------------")
+        print(OmegaConf.to_yaml(omega_cfg_1))
+        print("db.user :", omega_cfg_1.db.user)
+        print("db.password :", omega_cfg_1.db.password)
+        print("db.driver :", omega_cfg_1.db.driver)
+        print("------- omegaconf---------------")
+
+        pprint(kwargs)
+        print(ds)
+        return 'This is second task'
+
+    print_context_instance = print_context()
+    second_task_omegaconf_test_instance = second_task_omegaconf_test()
+    print_context_instance >> second_task_omegaconf_test_instance
