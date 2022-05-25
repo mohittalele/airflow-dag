@@ -20,7 +20,7 @@ with DAG(
     # [START howto_operator_python]
 
     CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments'))
-    env = Variable.get_val("ENV_VAR") + '.yaml'
+    env = Variable.get("ENV_VAR") + '.yaml'
     CONFIG_PATH_1 = os.path.abspath(os.path.join(__file__, '..', 'environments/', env))
     print("NEW CONFIG_PATH", CONFIG_PATH_1)
     omega_cfg_1 = OmegaConf.load(CONFIG_PATH_1)
