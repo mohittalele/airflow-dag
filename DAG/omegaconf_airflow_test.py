@@ -79,9 +79,9 @@ with DAG(
 
         pprint(kwargs)
         print(ds)
-        return 'This is second task'
+        return 'This is third task'
 
     print_context_instance = omegaconf_test()
     second_task_omegaconf_test_instance = second_task_omegaconf_test()
     third_task_omegaconf_test_instance = third_task_omegaconf_test()
-    print_context_instance >> second_task_omegaconf_test_instance
+    print_context_instance >> second_task_omegaconf_test_instance >> third_task_omegaconf_test_instance
