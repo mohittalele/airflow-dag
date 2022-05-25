@@ -79,7 +79,7 @@ with DAG(
 
         pprint(kwargs)
         print(ds)
-        return omega_cfg_3
+        return "third task"
 
     print_context_instance = omegaconf_test()
     second_task_omegaconf_test_instance = second_task_omegaconf_test()
