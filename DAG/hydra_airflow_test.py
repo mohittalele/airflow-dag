@@ -9,6 +9,7 @@ from airflow.utils.context import Context
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+import os
 
 class GetRequestOperator(BaseOperator):
     """Custom operator to send GET request to provided url"""
@@ -34,9 +35,12 @@ def example_dag_decorator(email: str = 'example@example.com'):
 
     :param email: Email to send IP to. Defaults to example@example.com.
     """
+
+    CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments'))
+
     get_ip = GetRequestOperator(task_id='get_ip', url="http://httpbin.org/get")
 
-    @hydra.main(version_base=None, config_path="environments/", config_name="dev")
+    @hydra.main(version_base=None, config_path=CONFIG_PATH, config_name="dev")
     @task(multiple_outputs=True)
     def get_conf(cfg: DictConfig) -> Dict[str, DictConfig]:
         print(OmegaConf.to_yaml(cfg))
