@@ -28,6 +28,7 @@ from airflow.operators.python import BranchPythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow import utils
 
+
 def should_run(**kwargs):
     """
     Determine which empty_task should be run based on if the execution date minute is even or odd.
@@ -60,22 +61,29 @@ def consume_message(**kwargs):
     method_frame, header_frame, body = channel.basic_get(queue='external_airflow_triggers')
     if body:
         json_params = json.loads(body)
-        kwargs['ti'].xcom_push(key='job_params', value=json.dumps(json_params['params']))
-        channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-        connection.close()
-        print("Got message ? {}".format(body))
-        return json_params['task']
+        if 'params' in json_params:
+            kwargs['ti'].xcom_push(key='job_params', value=json.dumps(json_params['params']))
+            channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+            connection.close()
+            print("Got message ? {}".format(body))
+            return json_params['task']
+        elif 'key' in json_params:
+            kwargs['ti'].xcom_push(key='message', value=json.dumps(json_params))
+            channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+            connection.close()
+            print("Got message ? {}".format(body))
+            return 'ml_workflow'
     else:
         return 'task_trash'
 
 
 with DAG(
-    dag_id='external_trigger_bug_fix',
-    schedule_interval='*/1 * * * *',
-    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
-    catchup=False,
-    default_args={'depends_on_past': True},
-    tags=['example'],
+        dag_id='external_trigger_bug_fix',
+        schedule_interval='*/1 * * * *',
+        start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+        catchup=False,
+        default_args={'depends_on_past': True},
+        tags=['example'],
 ) as dag:
     # cond = BranchPythonOperator(
     #     task_id='condition',
@@ -95,28 +103,31 @@ with DAG(
         # conf={'message': '{{ dag_run.conf.get("message") }}'},
         conf={
             "job_params":
-            "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
+                "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
     )
     task_b = TriggerDagRunOperator(
-        # task_id="test_trigger_dagrun",
         task_id='hello_world_b',
         trigger_dag_id="hello_world_b",
         conf={
             "job_params":
-            "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
+                "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
     )
     task_c = TriggerDagRunOperator(
-        # task_id="test_trigger_dagrun",
         task_id='hello_world_c',
         trigger_dag_id="hello_world_c",
         conf={
             "job_params":
-            "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
+                "{{ ti.xcom_pull(task_ids='router', key='job_params') }}"},
     )
-
-    router >> [task_a, task_b, task_c, task_trash]
+    ml_workflow = TriggerDagRunOperator(
+        task_id='ml_workflow',
+        trigger_dag_id="ml_workflow",
+        conf={
+            "job_params":
+                "{{ ti.xcom_pull(task_ids='router', key='message') }}"},
+    )
+    router >> [task_a, task_b, task_c, ml_workflow, task_trash]
 
     # empty_task_1 = EmptyOperator(task_id='empty_task_1')
     # empty_task_2 = EmptyOperator(task_id='empty_task_2')
     # cond >> [empty_task_1, empty_task_2]
-
