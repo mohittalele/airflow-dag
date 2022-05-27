@@ -38,6 +38,7 @@ def print_config():
 def print_hello(dag_run=None):
     # task_params = context['dag_run'].conf['task_payload']
     print(f"Remotely received value of {dag_run.conf.get('job_params')} for key=job_params")
+    print(f"Remotely received value of value  {dag_run.conf.get('job_params')['value']} for key=job_params")
     # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
     print_config()
 
