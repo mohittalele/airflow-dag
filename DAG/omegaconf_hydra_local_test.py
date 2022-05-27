@@ -55,13 +55,14 @@ def my_app(cfg: DictConfig):
     print(OmegaConf.to_yaml(res))
     print("db.user :", res.db.user)
     print("db.password :", res.db.password)
-    print("db.driver :", type(res.db.driver))
+    print("type of object res  :", type(res))
     print("db.additional_key :", res.db.additional_key)
     print("db.additional_key :", res.db.UDID)
-
     print("res.db = ", res.db)
-    print("db.vyper_setting.tagger.output_bucket_path" , res.db.vyper_settings.tagger.output_bucket_path)
-    print("db.vyper_setting.slang_word_tagger.output_bucket_path" , res.db.vyper_settings.slang_word_tagger.output_bucket_path)
+    print("db.vyper_setting.tagger.output_bucket_path", res.db.vyper_settings.tagger.output_bucket_path)
+    print("db.vyper_setting.slang_word_tagger.output_bucket_path",
+          res.db.vyper_settings.slang_word_tagger.output_bucket_path)
+
 
 if __name__ == "__main__":
     my_app()
