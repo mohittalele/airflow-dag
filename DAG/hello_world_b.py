@@ -18,6 +18,11 @@ def print_config():
     res.db.date = time.strftime("%Y%m%d-%H%M%S")
     print(OmegaConf.to_yaml(res))
     print("CONFIG_PATH : ", config_path_dev)
+    print("res.db.jobs = ", res.db.jobs)
+    print("res.db.jobs = ", res.db.vypersetting)
+    print("res.db = ", res.db)
+    print("Sleeping the task for 5 minutes")
+    time.sleep(300.0)
 
 def print_hello(dag_run=None):
     # task_params = context['dag_run'].conf['task_payload']
