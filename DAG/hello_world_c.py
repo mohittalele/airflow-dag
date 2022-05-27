@@ -2,7 +2,8 @@ import airflow
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-def print_config():
+
+def load_config():
     from omegaconf import OmegaConf
     import time
     import os
@@ -14,15 +15,24 @@ def print_config():
     res = OmegaConf.merge(omega_cfg_default, omega_cfg_dev)
     res.db.UDID = "ABCDEF_Task_C"
     res.db.date = time.strftime("%Y%m%d-%H%M%S")
+
+
+def print_config(res):
+    from omegaconf import OmegaConf
+    import time
+    time.sleep(120.0)
     print(OmegaConf.to_yaml(res))
-    print("CONFIG_PATH : ", config_path_dev)
     print("res.db.jobs = ", res.db.jobs)
-    print("res.db.jobs = ", res.db.vyper_settings)
+    print("res.db.vyper_settings = ", res.db.vyper_settings)
     print("res.db = ", res.db)
-    print("db.vyper_setting.tagger.output_bucket_path" , res.db.vyper_settings.tagger.output_bucket_path)
-    print("db.vyper_setting.slang_word_tagger.output_bucket_path" , res.db.vyper_settings.slang_word_tagger.output_bucket_path)
+    print("db.vyper_setting.tagger.output_bucket_path", res.db.vyper_settings.tagger.output_bucket_path)
+    print("db.vyper_setting.slang_word_tagger.output_bucket_path",
+          res.db.vyper_settings.slang_word_tagger.output_bucket_path)
     print("Sleeping the task for 5 minutes")
     time.sleep(300.0)
+    print("db.vyper_setting.tagger.output_bucket_path", res.db.vyper_settings.tagger.output_bucket_path)
+    print("db.vyper_setting.slang_word_tagger.output_bucket_path",
+          res.db.vyper_settings.slang_word_tagger.output_bucket_path)
 
 
 def print_hello(dag_run=None):
@@ -30,6 +40,7 @@ def print_hello(dag_run=None):
     print(f"Remotely received value of {dag_run.conf.get('job_params')} for key=job_params")
     # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
     print_config()
+
 
 with DAG(
         dag_id='hello_world_c',
@@ -39,6 +50,9 @@ with DAG(
         },
         schedule_interval=None
 ) as dag:
+
+    load_config()
+
     PythonOperator(
         task_id='hello_world_printer',
         python_callable=print_hello
