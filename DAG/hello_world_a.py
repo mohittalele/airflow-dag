@@ -1,4 +1,4 @@
-import os
+
 
 import airflow
 from airflow import DAG
@@ -8,6 +8,7 @@ from airflow.operators.python import PythonOperator
 def print_config():
     from omegaconf import OmegaConf
     import time
+    import os
     config_path_default = os.path.abspath(os.path.join(__file__, '..', 'environments/default.yaml'))
     config_path_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
     omega_cfg_dev = OmegaConf.load(config_path_dev)
