@@ -1,0 +1,11 @@
+db:
+  env: development
+  driver: ${db.env}_mysql
+  user: ${db.env}_omry
+  password: secret_in_dev
+  additional_key : ${db.env}_additional_key
+  vyper_settings:
+    tagger:
+      tag_frequency: dev_daily
+      algorithm: dev_dummy_algo
+      output_bucket_path: vyper_dev/$db.date/$db.UDID

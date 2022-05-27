@@ -23,28 +23,41 @@
 from omegaconf import DictConfig, OmegaConf
 import hydra
 import os
+import time
 
-CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments'))
+
+CONFIG_PATH = os.path.abspath(os.path.join(__file__, '..', 'environments/prod'))
 print("CONFIG_PATH :", CONFIG_PATH)
-env = 'prod.yaml'
-CONFIG_PATH_1 = os.path.abspath(os.path.join(__file__, '..', 'environments/', env))
-print("NEW CONFIG_PATH", CONFIG_PATH_1)
+CONFIG_PATH_prod = os.path.abspath(os.path.join(__file__, '..', 'environments/prod', 'prod.yaml'))
+print("NEW CONFIG_PATH_1", CONFIG_PATH_prod)
+CONFIG_PATH_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
+print("NEW CONFIG_PATH_2 : ", CONFIG_PATH_dev)
+CONFIG_PATH_default = os.path.abspath(os.path.join(__file__, '..', 'environments/default.yaml'))
 
 
-@hydra.main(version_base=None, config_path=CONFIG_PATH, config_name="dev")
+@hydra.main(version_base=None, config_path=CONFIG_PATH, config_name="prod")
 def my_app(cfg: DictConfig):
+    print("------- Hydra Conf---------------")
     print(OmegaConf.to_yaml(cfg))
-    OmegaConf.save(config=cfg, f='cfg.yaml')
     print(OmegaConf)
     print("db.user :", cfg.db.user)
     print("db.password :", cfg.db.password)
+    print("------- Hydra Conf End---------------")
 
     print("------- omegaconf---------------")
-    omega_cfg_1 = OmegaConf.load(CONFIG_PATH_1)
-    print(OmegaConf.to_yaml(omega_cfg_1))
-    print("db.user :", omega_cfg_1.db.user)
-    print("db.password :", omega_cfg_1.db.password)
+    omega_cfg_prod = OmegaConf.load(CONFIG_PATH_prod)
+    omega_cfg_dev = OmegaConf.load(CONFIG_PATH_dev)
+    omega_cfg_default = OmegaConf.load(CONFIG_PATH_default)
+    res = OmegaConf.merge(omega_cfg_default, omega_cfg_dev)
+    res.db.UDID = "ABCDEF"
+    res.db.date = time.strftime("%Y%m%d-%H%M%S")
 
+    print(OmegaConf.to_yaml(res))
+    print("db.user :", res.db.user)
+    print("db.password :", res.db.password)
+    print("db.driver :", type(res.db.driver))
+    print("db.additional_key :", res.db.additional_key)
+    print("db.additional_key :", res.db.UDID)
 
 if __name__ == "__main__":
     my_app()
