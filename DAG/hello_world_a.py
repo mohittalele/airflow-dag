@@ -37,10 +37,13 @@ def print_config():
 
 def print_hello(dag_run=None):
     # task_params = context['dag_run'].conf['task_payload']
-
+    import json
     print(f"Remotely received value of {dag_run.conf.get('job_params')} for key=job_params")
     print(type(dag_run.conf.get('job_params')))
     print(f"Remotely received value of value  {dag_run.conf.get('job_params').get('value')} for key=job_params")
+    json_obj = json.loads(dag_run.conf.get('job_params'))
+    value = json_obj['value']
+    print("remote value is = ", value)
     # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
     print_config()
 
