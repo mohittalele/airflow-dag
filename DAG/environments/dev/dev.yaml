@@ -6,6 +6,6 @@ db:
   additional_key : ${db.env}_additional_key
   vyper_settings:
     tagger:
-      tag_frequency: changed
-      algorithm: changed
-      output_bucket_path: changed
+      tag_frequency: dev_daily
+      algorithm: dev_dummy_algo
+      output_bucket_path: vyper_dev/${db.date}/${db.UDID}
