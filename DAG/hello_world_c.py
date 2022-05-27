@@ -1,6 +1,7 @@
 import airflow
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+import time
 
 
 def load_config():
@@ -12,12 +13,11 @@ def load_config():
     config_path_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
     omega_cfg_dev = OmegaConf.load(config_path_dev)
     omega_cfg_default = OmegaConf.load(config_path_default)
-    res = OmegaConf.merge(omega_cfg_default, omega_cfg_dev)
-    res.db.UDID = "ABCDEF_Task_C"
-    res.db.date = time.strftime("%Y%m%d-%H%M%S")
+
+    return OmegaConf.merge(omega_cfg_default, omega_cfg_dev)
 
 
-def print_config(res):
+def print_config():
     from omegaconf import OmegaConf
     import time
     time.sleep(120.0)
@@ -50,8 +50,9 @@ with DAG(
         },
         schedule_interval=None
 ) as dag:
-
-    load_config()
+    res = load_config()
+    res.db.UDID = "ABCDEF_Task_C"
+    res.db.date = time.strftime("%Y%m%d-%H%M%S")
 
     PythonOperator(
         task_id='hello_world_printer',
