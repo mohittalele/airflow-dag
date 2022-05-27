@@ -2,11 +2,7 @@ import airflow
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-
-def print_hello(dag_run=None):
-    # task_params = context['dag_run'].conf['task_payload']
-    print(f"Remotely received value of {dag_run.conf.get('job_params')} for key=job_params")
-    # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
+def print_config():
     from omegaconf import OmegaConf
     import time
     import os
@@ -16,10 +12,17 @@ def print_hello(dag_run=None):
     omega_cfg_dev = OmegaConf.load(config_path_dev)
     omega_cfg_default = OmegaConf.load(config_path_default)
     res = OmegaConf.merge(omega_cfg_default, omega_cfg_dev)
-    res.db.UDID = "ABCDEF_Task_c"
+    res.db.UDID = "ABCDEF_Task_C"
     res.db.date = time.strftime("%Y%m%d-%H%M%S")
     print(OmegaConf.to_yaml(res))
+    print("CONFIG_PATH : ", config_path_dev)
 
+
+def print_hello(dag_run=None):
+    # task_params = context['dag_run'].conf['task_payload']
+    print(f"Remotely received value of {dag_run.conf.get('job_params')} for key=job_params")
+    # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
+    print_config()
 
 with DAG(
         dag_id='hello_world_c',
