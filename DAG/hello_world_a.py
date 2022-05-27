@@ -19,7 +19,7 @@ def print_config():
     print(OmegaConf.to_yaml(res))
     print("CONFIG_PATH : ", config_path_dev)
     print("res.db.jobs = ", res.db.jobs)
-    print("res.db.jobs = ", res.db.vypersetting)
+    print("res.db.jobs = ", res.db.vyper_settings)
     print("res.db = ", res.db)
     print("Sleeping the task for 5 minutes")
     time.sleep(300.0)
