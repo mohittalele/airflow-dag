@@ -21,6 +21,8 @@ def print_config():
     print("res.db.jobs = ", res.db.jobs)
     print("res.db.jobs = ", res.db.vyper_settings)
     print("res.db = ", res.db)
+    print("db.vyper_setting.tagger.output_bucket_path" , res.db.vyper_settings.tagger.output_bucket_path)
+    print("db.vyper_setting.slang_word_tagger.output_bucket_path" , res.db.vyper_settings.slang_word_tagger.output_bucket_path)
     print("Sleeping the task for 5 minutes")
     time.sleep(300.0)
 
