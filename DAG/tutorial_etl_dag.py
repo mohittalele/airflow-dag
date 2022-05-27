@@ -57,15 +57,15 @@ with DAG(
 
     # [START extract_function]
     def extract(**kwargs):
-        data = kwargs['data']
+        ti = kwargs['ti']
         data_string = '{"1001": 301.27, "1002": 433.21, "1003": 502.22}'
-        data.xcom_push('order_data', data_string)
+        ti.xcom_push('order_data', data_string)
 
     # [END extract_function]
 
     # [START transform_function]
     def transform(**kwargs):
-        data = kwargs['data']
+        data = kwargs['ti']
         extract_data_string = data.xcom_pull(task_ids='extract', key='order_data')
         order_data = json.loads(extract_data_string)
 
@@ -81,7 +81,7 @@ with DAG(
 
     # [START load_function]
     def load(**kwargs):
-        data = kwargs['data']
+        data = kwargs['ti']
         total_value_string = data.xcom_pull(task_ids='transform', key='total_order_value')
         total_order_value = json.loads(total_value_string)
 

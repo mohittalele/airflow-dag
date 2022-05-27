@@ -16,20 +16,23 @@ releases:
       app: airflow
     chart: apache-airflow/airflow
     version: 1.5.0
-    needs:
-      - airflow-namespace
     values:
-      - executor: KubernetesExecutor
+      - # executor: KubernetesExecutor
         # extraEnvFrom: 
         #   - secretRef:
         #       name: airflow-connections
         #   - configMapRef:
         #       name: airflow-variables
+        defaultAirflowRepository: mohittalele/airflow
+
+        # Default airflow tag to deploy
+        defaultAirflowTag: "2.2.4v1"
+        airflowVersion: "2.2.4"
         dags:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
-            branch: feature/airflow-tutorials
+            branch: feature/test-hydra
             subPath: DAG
         logs:
           persistence:
@@ -38,7 +41,7 @@ releases:
 
   - name: airflow-namespace                                            
     labels:                                  
-      app: airflow
+      app: airflow-namespace
     chart: incubator/raw
     namespace: airflow
     values:
@@ -122,11 +125,9 @@ releases:
                   restartPolicy: Never
               backoffLimit: 4
 
-
-
-  - name: ubuntu-workspace
+  - name: develop-workspace
     labels:                                  
-      app: ubuntu
+      app: develop-workspace
     chart: incubator/raw
     namespace: airflow
     values: 
@@ -134,11 +135,43 @@ releases:
         - apiVersion: v1
           kind: Pod
           metadata:
-            name: ubuntu
+            name: dev-workspace
           spec:
             containers:
             - name: ubuntu
-              image: ubuntu:latest
+              image: mohittalele/ubuntu_util:0.0.1
               # Just spin & wait forever
               command: [ "/bin/bash", "-c", "--" ]
               args: [ "while true; do sleep 30; done;" ]
+            - name: airflow
+              image: apache/airflow:2.2.4
+              # Just spin & wait forever
+              command:
+                - sh
+                - -c
+                - |
+                  apt-get update ;
+                  apt install vi ;
+                  pip install hydra-core --upgrade ;
+                  airflow db init ;
+                  while true; 
+                    do sleep 30; 
+                  done;
+              args: [ "apt-get update ; while true; do sleep 30; done;" ]
+#              volumeMounts:
+#                - name: local-airflow
+#                  mountPath: /opt/
+#                - name: dag-folder
+#                  mountPath: /opt/airflow/dags
+#                - name: env-folder
+#                  mountPath: /opt/airflow
+#            volumes:
+#              - name: local-airflow
+#                hostPath:
+#                  path: /host/Documents/MLOps/airflow-dag
+#              - name: dag-folder
+#                hostPath:
+#                  path: /host/Documents/MLOps/airflow-dag/DAG
+#              - name: env-folder
+#                hostPath:
+#                  path: /host/Documents/MLOps/airflow-dag/environments
