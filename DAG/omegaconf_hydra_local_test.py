@@ -59,5 +59,9 @@ def my_app(cfg: DictConfig):
     print("db.additional_key :", res.db.additional_key)
     print("db.additional_key :", res.db.UDID)
 
+    print("res.db = ", res.db)
+    print("db.vyper_setting.tagger.output_bucket_path" , res.db.vyper_settings.tagger.output_bucket_path)
+    print("db.vyper_setting.slang_word_tagger.output_bucket_path" , res.db.vyper_settings.slang_word_tagger.output_bucket_path)
+
 if __name__ == "__main__":
     my_app()

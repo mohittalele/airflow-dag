@@ -17,13 +17,13 @@ db:
     tagger:
       tag_frequency: daily
       algorithm: dummy_algo
-      input_bucket_path: vyper/$db.UDID
-      output_bucket_path: vyper/$db.date/$db.UDID
+      input_bucket_path: vyper/${db.UDID}
+      output_bucket_path: vyper/${db.date}/${db.UDID}
     slang_word_tagger:
       tag_frequency: daily
       algorithm: dummy_algo
-      input_bucket_path: vyper/$db.UDID
-      output_bucket_path: vyper/$db.date/$db.UDID/slang_word_tagger
+      input_bucket_path: vyper/${db.UDID}
+      output_bucket_path: vyper/${db.date}/${db.UDID}/slang_word_tagger
     vyper_face_tag:
       abc:
         xyz:

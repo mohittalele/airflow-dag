@@ -8,4 +8,4 @@ db:
     tagger:
       tag_frequency: dev_daily
       algorithm: dev_dummy_algo
-      output_bucket_path: vyper_dev/$db.date/$db.UDID
+      output_bucket_path: vyper_dev/${db.date}/${db.UDID}
