@@ -32,7 +32,7 @@ releases:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
-            branch: feature/test-hydra
+            branch: feature/simulate-vanilla-workflow
             subPath: DAG
         logs:
           persistence:
