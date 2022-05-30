@@ -40,7 +40,7 @@ def example_dag_decorator(email: str = 'example@example.com'):
 
     get_ip = GetRequestOperator(task_id='get_ip', url="http://httpbin.org/get")
 
-    @hydra.main(version_base=None, config_path=".", config_name="dev")
+    @hydra.main(version_base=None, config_path="environments", config_name="dev")
     @task(multiple_outputs=True)
     def get_conf(cfg: DictConfig) -> Dict[str, DictConfig]:
         print(OmegaConf.to_yaml(cfg))
