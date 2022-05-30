@@ -97,7 +97,8 @@ with DAG(
 ) as dag:
     res = load_config()
     res.db.UDID = "ml_workflow"
-    res.db.date = time.strftime("%Y%m%d-%H%M%S")
+    # res.db.date = time.strftime("%Y%m%d-%H%M%S")
+    res.db.date = time.strftime("%Y%m%d")
 
     copy_object = PythonOperator(
         task_id='copy_object',
