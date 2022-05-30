@@ -2,13 +2,12 @@ import time
 import airflow
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+import os
 
 
 def load_config():
     from omegaconf import OmegaConf
     import time
-    import os
-
     config_path_default = os.path.abspath(os.path.join(__file__, '..', 'environments/default.yaml'))
     config_path_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
     omega_cfg_dev = OmegaConf.load(config_path_dev)
@@ -38,14 +37,47 @@ def print_config():
 
 def copy_object(dag_run=None):
     import json
+    from minio import Minio
     # task_params = context['dag_run'].conf['task_payload']
     print(f"Remotely received value of {dag_run.conf.get('message')} for key=message")
     print(type(dag_run.conf.get('message')))
     json_obj = json.loads(dag_run.conf.get('message'))
     print("minio key - uploaded folder and key = ", json_obj['Key'])
     # print('Hello world a with {}'.format({dag_run.conf.get('job_params')}))
-
+    client = Minio(
+        "minio.airflow.svc.cluster.local:9000",
+        access_key="ruxiu105QkeBjUXVOq4j",
+        secret_key="UfvrsBtgZpwOqwiht239C5c3lJM4vWnLQcdMCuB8",
+        secure=False,
+    )
+    object_path = json_obj['Key'].partition("dag-input/")[2]
+    print("object path of copied file = ", object_path)
+    print(" Trying to copy file", json_obj['Key'], "from S3 bucket")
+    client.fget_object(
+        "dag-input", json_obj['Key'].partition("dag-input/")[2], "outputs/copied_" + os.path.basename(object_path)
+    )
+    print("downloaded file saved in outputs/copied_", os.path.basename(object_path))
+    res.db.UDID = os.path.splitext(object_path)[0]
+    res.db.vyper_settings.tagger.airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
+    print("res.db.vyper_settings.tagger.airflow_file_path = ", res.db.vyper_settings.tagger.airflow_file_path)
     print_config()
+
+
+def upload_object(dag_run=None):
+    import json
+    from minio import Minio
+    client = Minio(
+        "minio.airflow.svc.cluster.local:9000",
+        access_key="ruxiu105QkeBjUXVOq4j",
+        secret_key="UfvrsBtgZpwOqwiht239C5c3lJM4vWnLQcdMCuB8",
+        secure=False,
+    )
+    client.fput_object(
+        "dag-input", res.db.vyper_settings.tagger.output_bucket_path + "/copied_" + os.path.basename(),
+        res.db.vyper_settings.tagger.airflow_file_path
+    )
+    print("Successfully uploaded data to minio - path is :  ",
+          res.db.vyper_settings.tagger.output_bucket_path + "/copied_" + os.path.basename())
 
 
 with DAG(
@@ -59,7 +91,15 @@ with DAG(
     res = load_config()
     res.db.UDID = "ml_workflow"
     res.db.date = time.strftime("%Y%m%d-%H%M%S")
-    PythonOperator(
+
+    copy_object = PythonOperator(
         task_id='copy_object',
         python_callable=copy_object
     )
+
+    upload_object = PythonOperator(
+        task_id="upload_object",
+        python_callable=upload_object
+    )
+
+    copy_object >> upload_object
