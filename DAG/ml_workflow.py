@@ -59,6 +59,6 @@ with DAG(
     res.db.UDID = "ml_workflow"
     res.db.date = time.strftime("%Y%m%d-%H%M%S")
     PythonOperator(
-        task_id='hello_world_printer',
+        task_id='copy_object',
         python_callable=copy_object
     )
