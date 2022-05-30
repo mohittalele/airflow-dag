@@ -63,14 +63,14 @@ def consume_message(**kwargs):
         json_params = json.loads(body)
         print("Got message ? {}".format(body))
         print('params' in json_params)
-        print('key' in json_params)
+        print('Key' in json_params)
         if 'params' in json_params:
             kwargs['ti'].xcom_push(key='job_params', value=json.dumps(json_params['params']))
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
             connection.close()
             print("Got message ? {}".format(body))
             return json_params['task']
-        elif 'key' in json_params:
+        elif 'Key' in json_params:
             kwargs['ti'].xcom_push(key='message', value=json.dumps(json_params))
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
             connection.close()
