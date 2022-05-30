@@ -126,7 +126,7 @@ with DAG(
         task_id='ml_workflow',
         trigger_dag_id="ml_workflow",
         conf={
-            "job_params":
+            "message":
                 "{{ ti.xcom_pull(task_ids='router', key='message') }}"},
     )
     router >> [task_a, task_b, task_c, ml_workflow, task_trash]
