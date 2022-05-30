@@ -20,7 +20,7 @@ def print_config():
     from omegaconf import OmegaConf
     import time
     print("Sleeping the task for 2 minutes")
-    time.sleep(120.0)
+    # time.sleep(120.0)
     print(OmegaConf.to_yaml(res))
     print("res.db.jobs = ", res.db.jobs)
     print("res.db.vyper_settings = ", res.db.vyper_settings)
@@ -29,7 +29,7 @@ def print_config():
     print("db.vyper_setting.slang_word_tagger.output_bucket_path = ",
           res.db.vyper_settings.slang_word_tagger.output_bucket_path)
     print("Sleeping the task for 5 minutes")
-    time.sleep(300.0)
+    # time.sleep(300.0)
     print("db.vyper_setting.tagger.output_bucket_path = ", res.db.vyper_settings.tagger.output_bucket_path)
     print("db.vyper_setting.slang_word_tagger.output_bucket_path = ",
           res.db.vyper_settings.slang_word_tagger.output_bucket_path)
@@ -37,6 +37,7 @@ def print_config():
 
 def copy_object(dag_run=None):
     import json
+    from omegaconf import OmegaConf
     from minio import Minio
     # task_params = context['dag_run'].conf['task_payload']
     print(f"Remotely received value of {dag_run.conf.get('message')} for key=message")
@@ -57,14 +58,15 @@ def copy_object(dag_run=None):
         "dag-input", json_obj['Key'].partition("dag-input/")[2], "outputs/copied_" + os.path.basename(object_path)
     )
     print("downloaded file saved in outputs/copied_", os.path.basename(object_path))
-    res.db.UDID = os.path.splitext(object_path)[0]
-    res.db.vyper_settings.tagger.airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
+    OmegaConf.update(res, "db.UDID", os.path.splitext(object_path)[0])
+    # res.db.UDID = os.path.splitext(object_path)[0]
+    # res.db.vyper_settings.tagger.airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
+    OmegaConf.update(res, "db.vyper_settings.tagger.airflow_file_path", "outputs/copied_" + os.path.basename(object_path))
     print("res.db.vyper_settings.tagger.airflow_file_path = ", res.db.vyper_settings.tagger.airflow_file_path)
     print_config()
 
 
 def upload_object(dag_run=None):
-    import json
     from minio import Minio
     from omegaconf import OmegaConf
 
@@ -80,6 +82,7 @@ def upload_object(dag_run=None):
         res.db.vyper_settings.tagger.output_bucket_path + "/copied_" + os.path.basename(res.db.vyper_settings.tagger.airflow_file_path),
         res.db.vyper_settings.tagger.airflow_file_path
     )
+    OmegaConf.update()
     print("Successfully uploaded data to minio - path is :  ",
           res.db.vyper_settings.tagger.output_bucket_path
           + "/copied_" + os.path.basename(res.db.vyper_settings.tagger.airflow_file_path))

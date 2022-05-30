@@ -19,6 +19,7 @@ db:
       algorithm: dummy_algo
       input_bucket_path: vyper/${db.UDID}
       output_bucket_path: vyper/${db.date}/${db.UDID}
+      airflow_file_path: ???
     slang_word_tagger:
       tag_frequency: daily
       algorithm: dummy_algo

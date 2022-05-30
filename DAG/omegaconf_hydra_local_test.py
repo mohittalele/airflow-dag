@@ -61,7 +61,9 @@ def my_app(cfg: DictConfig):
     print("db.vyper_setting.tagger.output_bucket_path", res.db.vyper_settings.tagger.output_bucket_path)
     print("db.vyper_setting.slang_word_tagger.output_bucket_path",
           res.db.vyper_settings.slang_word_tagger.output_bucket_path)
-
+    object_path = "dag-input/airflow-dag/validation-data/yoda.jpg"
+    OmegaConf.update(res, "db.vyper_settings.tagger.airflow_file_path", "outputs/copied_" + os.path.basename(object_path))
+    print("db.vyper_settings.tagger.airflow_file_path = ", res.db.vyper_settings.tagger.airflow_file_path)
 
 if __name__ == "__main__":
     import json
