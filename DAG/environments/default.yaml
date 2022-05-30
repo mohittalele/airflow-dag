@@ -1,7 +1,7 @@
 db:
   UDID: ???
   date: ???
-  env: development
+  env: stg
   driver: ${db.env}_mysql
   user: ${db.env}_omry
   password: secret_in_dev

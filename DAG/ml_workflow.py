@@ -20,6 +20,7 @@ def load_config():
 def print_config():
     from omegaconf import OmegaConf
     import time
+    print("Sleeping the task for 2 minutes")
     time.sleep(120.0)
     print(OmegaConf.to_yaml(res))
     print("res.db.jobs = ", res.db.jobs)
