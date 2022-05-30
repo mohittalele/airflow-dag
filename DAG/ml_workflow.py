@@ -78,12 +78,12 @@ def upload_object(dag_run=None):
     )
     client.fput_object(
         "dag-input",
-        res.db.vyper_settings.tagger.output_bucket_path + os.path.basename(airflow_file_path),
+        res.db.vyper_settings.tagger.output_bucket_path + "/" + os.path.basename(airflow_file_path),
         airflow_file_path
     )
 
     print("Successfully uploaded data to minio - path is :  ",
-          res.db.vyper_settings.tagger.output_bucket_path
+          res.db.vyper_settings.tagger.output_bucket_path + "/"
           + os.path.basename(airflow_file_path))
 
 
