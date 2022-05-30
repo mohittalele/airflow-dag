@@ -36,10 +36,10 @@ def print_config():
 
 
 def copy_object(dag_run=None):
+    # Omegaconf object updated in this func scope are nt persistent
     import json
     from omegaconf import OmegaConf
     from minio import Minio
-    # task_params = context['dag_run'].conf['task_payload']
     print(f"Remotely received value of {dag_run.conf.get('message')} for key=message")
     print(type(dag_run.conf.get('message')))
     json_obj = json.loads(dag_run.conf.get('message'))
@@ -52,24 +52,23 @@ def copy_object(dag_run=None):
         secure=False,
     )
     object_path = json_obj['Key'].partition("dag-input/")[2]
+    airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
     print("object path of copied file = ", object_path)
     print(" Trying to copy file", json_obj['Key'], "from S3 bucket")
     client.fget_object(
-        "dag-input", json_obj['Key'].partition("dag-input/")[2], "outputs/copied_" + os.path.basename(object_path)
+        "dag-input", json_obj['Key'].partition("dag-input/")[2], airflow_file_path
     )
-    print("downloaded file saved in outputs/copied_", os.path.basename(object_path))
-    OmegaConf.update(res, "db.UDID", os.path.splitext(object_path)[0])
-    # res.db.UDID = os.path.splitext(object_path)[0]
-    # res.db.vyper_settings.tagger.airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
-    OmegaConf.update(res, "db.vyper_settings.tagger.airflow_file_path", "outputs/copied_" + os.path.basename(object_path))
-    print("res.db.vyper_settings.tagger.airflow_file_path = ", res.db.vyper_settings.tagger.airflow_file_path)
+    print("downloaded file saved in ", airflow_file_path)
     print_config()
 
 
 def upload_object(dag_run=None):
     from minio import Minio
     from omegaconf import OmegaConf
-
+    import json
+    json_obj = json.loads(dag_run.conf.get('message'))
+    object_path = json_obj['Key'].partition("dag-input/")[2]
+    airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
     print(OmegaConf.to_yaml(res))
     client = Minio(
         "minio.airflow.svc.cluster.local:9000",
@@ -79,13 +78,13 @@ def upload_object(dag_run=None):
     )
     client.fput_object(
         "dag-input",
-        res.db.vyper_settings.tagger.output_bucket_path + "/copied_" + os.path.basename(res.db.vyper_settings.tagger.airflow_file_path),
-        res.db.vyper_settings.tagger.airflow_file_path
+        res.db.vyper_settings.tagger.output_bucket_path + "/copied_" + os.path.basename(airflow_file_path),
+        airflow_file_path
     )
-    OmegaConf.update()
+
     print("Successfully uploaded data to minio - path is :  ",
           res.db.vyper_settings.tagger.output_bucket_path
-          + "/copied_" + os.path.basename(res.db.vyper_settings.tagger.airflow_file_path))
+          + "/copied_" + os.path.basename(airflow_file_path))
 
 
 with DAG(
