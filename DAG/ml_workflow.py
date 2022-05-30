@@ -66,6 +66,9 @@ def copy_object(dag_run=None):
 def upload_object(dag_run=None):
     import json
     from minio import Minio
+    from omegaconf import OmegaConf
+
+    print(OmegaConf.to_yaml(res))
     client = Minio(
         "minio.airflow.svc.cluster.local:9000",
         access_key="ruxiu105QkeBjUXVOq4j",
