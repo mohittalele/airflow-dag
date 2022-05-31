@@ -28,8 +28,6 @@ def print_config():
     print("db.vyper_setting.tagger.output_bucket_path = ", res.db.vyper_settings.tagger.output_bucket_path)
     print("db.vyper_setting.slang_word_tagger.output_bucket_path = ",
           res.db.vyper_settings.slang_word_tagger.output_bucket_path)
-    print("Sleeping the task for 5 minutes")
-    # time.sleep(300.0)
     print("db.vyper_setting.tagger.output_bucket_path = ", res.db.vyper_settings.tagger.output_bucket_path)
     print("db.vyper_setting.slang_word_tagger.output_bucket_path = ",
           res.db.vyper_settings.slang_word_tagger.output_bucket_path)
@@ -88,6 +86,8 @@ def upload_object(dag_run=None):
     print("Successfully uploaded data to minio - path is :  ",
           res.db.vyper_settings.tagger.output_bucket_path + "/"
           + os.path.basename(airflow_file_path))
+    print("Sleeping the task for 5 minutes")
+    time.sleep(300.0)
 
 
 with DAG(
