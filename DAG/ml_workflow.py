@@ -52,7 +52,7 @@ def copy_object(dag_run=None):
         secret_key="UfvrsBtgZpwOqwiht239C5c3lJM4vWnLQcdMCuB8",
         secure=False,
     )
-    res.db.UDID = os.path.splitext(json_obj['Key'])[0]
+    res.db.UDID = os.path.splitext(json_obj['Key'])[0].split('/')[-1]
     object_path = json_obj['Key'].partition("dag-input/")[2]
     airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
     print("object path of copied file = ", object_path)
@@ -71,7 +71,7 @@ def upload_object(dag_run=None):
     json_obj = json.loads(dag_run.conf.get('message'))
     object_path = json_obj['Key'].partition("dag-input/")[2]
     airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
-    res.db.UDID = os.path.splitext(json_obj['Key'])[0]
+    res.db.UDID = os.path.splitext(json_obj['Key'])[0].split('/')[-1]
     print(OmegaConf.to_yaml(res))
     client = Minio(
         "minio.airflow.svc.cluster.local:9000",
