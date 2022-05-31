@@ -36,7 +36,8 @@ def print_config():
 
 
 def copy_object(dag_run=None):
-    # Omegaconf object updated in this func scope are nt persistent
+    # Omegaconf object updated in this func scope are not persistent
+
     import json
     from omegaconf import OmegaConf
     from minio import Minio
@@ -51,6 +52,7 @@ def copy_object(dag_run=None):
         secret_key="UfvrsBtgZpwOqwiht239C5c3lJM4vWnLQcdMCuB8",
         secure=False,
     )
+    res.db.UDID = os.path.splitext(json_obj['key'])[0]
     object_path = json_obj['Key'].partition("dag-input/")[2]
     airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
     print("object path of copied file = ", object_path)
@@ -69,6 +71,7 @@ def upload_object(dag_run=None):
     json_obj = json.loads(dag_run.conf.get('message'))
     object_path = json_obj['Key'].partition("dag-input/")[2]
     airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
+    res.db.UDID = os.path.splitext(json_obj['key'])[0]
     print(OmegaConf.to_yaml(res))
     client = Minio(
         "minio.airflow.svc.cluster.local:9000",
@@ -96,7 +99,7 @@ with DAG(
         schedule_interval=None
 ) as dag:
     res = load_config()
-    res.db.UDID = "ml_workflow"
+
     # res.db.date = time.strftime("%Y%m%d-%H%M%S")
     res.db.date = time.strftime("%Y%m%d")
 
