@@ -69,12 +69,12 @@ def consume_message(**kwargs):
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
             connection.close()
             print("Got message ? {}".format(body))
-            connection.close(reply_code="200", reply_text="Gracefully closed connection")
+            connection.close(reply_code=200, reply_text="Gracefully closed connection")
             return json_params['task']
         elif 'Key' in json_params:
             kwargs['ti'].xcom_push(key='message', value=json.dumps(json_params))
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-            connection.close(reply_code="200", reply_text="Gracefully closed connection")
+            connection.close(reply_code=200, reply_text="Gracefully closed connection")
             print("Got message ? {}".format(body))
             return 'ml_workflow'
     else:
