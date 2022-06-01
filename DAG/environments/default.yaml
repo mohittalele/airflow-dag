@@ -1,7 +1,7 @@
 db:
   UDID: ???
   date: ???
-  env: development
+  env: stg
   driver: ${db.env}_mysql
   user: ${db.env}_omry
   password: secret_in_dev
@@ -17,12 +17,13 @@ db:
     tagger:
       tag_frequency: daily
       algorithm: dummy_algo
-      input_bucket_path: vyper/${db.UDID}
-      output_bucket_path: vyper/${db.date}/${db.UDID}
+      input_bucket_path: ???
+      output_bucket_path: vyper/some_default_path
+      airflow_file_path: ???
     slang_word_tagger:
       tag_frequency: daily
       algorithm: dummy_algo
-      input_bucket_path: vyper/${db.UDID}
+      input_bucket_path: ???
       output_bucket_path: vyper/${db.date}/${db.UDID}/slang_word_tagger
     vyper_face_tag:
       abc:

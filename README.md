@@ -21,6 +21,7 @@ while testing you might want to mount the local folders to the minikube pods. To
 - Airflow dont have Pika package. So we need to either manually install the package in the airflow-components or build a custom image with all packages that DAGs require
 # Advanced Templating
 
+
 ```
 from airflow.models import DAG
 from airflow.operators.bash_operator import BashOperator

@@ -8,6 +8,7 @@ from airflow.operators.email import EmailOperator
 from airflow.utils.context import Context
 import hydra
 from omegaconf import DictConfig, OmegaConf
+from hydra import compose, initialize
 
 import os
 
@@ -40,9 +41,10 @@ def example_dag_decorator(email: str = 'example@example.com'):
 
     get_ip = GetRequestOperator(task_id='get_ip', url="http://httpbin.org/get")
 
-    @hydra.main(version_base=None, config_path=".", config_name="dev")
     @task(multiple_outputs=True)
-    def get_conf(cfg: DictConfig) -> Dict[str, DictConfig]:
+    def get_conf() -> Dict[str, DictConfig]:
+        initialize(version_base=None, config_path="environments")
+        cfg = compose("default.yaml")
         print(OmegaConf.to_yaml(cfg))
         print("db.user :", cfg.db.user)
         print("db.password :", cfg.db.user)

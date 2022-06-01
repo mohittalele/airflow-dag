@@ -26,13 +26,13 @@ releases:
         defaultAirflowRepository: mohittalele/airflow
 
         # Default airflow tag to deploy
-        defaultAirflowTag: "2.2.4v1"
+        defaultAirflowTag: "2.2.4v2"
         airflowVersion: "2.2.4"
         dags:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
-            branch: feature/test-hydra
+            branch: feature/simulate-vanilla-workflow
             subPath: DAG
         logs:
           persistence:
