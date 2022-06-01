@@ -5,18 +5,17 @@ from airflow.operators.python import PythonOperator
 import os
 
 
-def load_config():
+def load_config(config_path_default, config_path_dev):
     from omegaconf import OmegaConf
     import time
-    config_path_default = os.path.abspath(os.path.join(__file__, '..', 'environments/default.yaml'))
-    config_path_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
+
     omega_cfg_dev = OmegaConf.load(config_path_dev)
     omega_cfg_default = OmegaConf.load(config_path_default)
 
     return OmegaConf.merge(omega_cfg_default, omega_cfg_dev)
 
 
-def print_config():
+def print_config(res):
     from omegaconf import OmegaConf
     import time
     print("Sleeping the task for 2 minutes")
@@ -34,6 +33,12 @@ def print_config():
 
 
 def copy_object(dag_run=None):
+    config_path_default = os.path.abspath(os.path.join(__file__, '..', 'environments/default.yaml'))
+    config_path_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
+    res = load_config(config_path_default, config_path_dev)
+
+    # res.db.date = time.strftime("%Y%m%d-%H%M%S")
+    res.db.date = time.strftime("%Y%m%d")
     # Omegaconf object updated in this func scope are not persistent
 
     import json
@@ -59,13 +64,20 @@ def copy_object(dag_run=None):
         "dag-input", json_obj['Key'].partition("dag-input/")[2], airflow_file_path
     )
     print("downloaded file saved in ", airflow_file_path)
-    print_config()
+    print_config(res)
 
 
 def upload_object(dag_run=None):
     from minio import Minio
     from omegaconf import OmegaConf
     import json
+
+    config_path_default = os.path.abspath(os.path.join(__file__, '..', 'environments/default.yaml'))
+    config_path_dev = os.path.abspath(os.path.join(__file__, '..', 'environments/dev', 'dev.yaml'))
+    res = load_config(config_path_default, config_path_dev)
+
+    # res.db.date = time.strftime("%Y%m%d-%H%M%S")
+    res.db.date = time.strftime("%Y%m%d")
     json_obj = json.loads(dag_run.conf.get('message'))
     object_path = json_obj['Key'].partition("dag-input/")[2]
     airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
@@ -98,10 +110,6 @@ with DAG(
         },
         schedule_interval=None
 ) as dag:
-    res = load_config()
-
-    # res.db.date = time.strftime("%Y%m%d-%H%M%S")
-    res.db.date = time.strftime("%Y%m%d")
 
     copy_object = PythonOperator(
         task_id='copy_object',
