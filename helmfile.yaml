@@ -32,7 +32,7 @@ releases:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
-            branch: feature/simulate-vanilla-workflow
+            branch: feature/remove-top-level-code
             subPath: DAG
         logs:
           persistence:

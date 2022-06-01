@@ -87,7 +87,7 @@ with DAG(
         schedule_interval='*/1 * * * *',
         start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
         catchup=False,
-        default_args={'depends_on_past': True},
+        default_args={'depends_on_past': False}, # https://stackoverflow.com/questions/48658594/airflow-depends-on-past-explanation
         tags=['example'],
 ) as dag:
     # cond = BranchPythonOperator(
