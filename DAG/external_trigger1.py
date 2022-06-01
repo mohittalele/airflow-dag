@@ -78,6 +78,7 @@ def consume_message(**kwargs):
             print("Got message ? {}".format(body))
             return 'ml_workflow'
     else:
+        print("message body is empty")
         connection.close(reply_code=200, reply_text="Gracefully closed connection")
         return 'task_trash'
 
