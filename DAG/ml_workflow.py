@@ -82,6 +82,7 @@ def upload_object(dag_run=None):
     object_path = json_obj['Key'].partition("dag-input/")[2]
     airflow_file_path = "outputs/copied_" + os.path.basename(object_path)
     res.db.UDID = os.path.splitext(json_obj['Key'])[0].split('/')[-1]
+    res.db.vyper_settings.tagger.airflow_file_path = airflow_file_path
     print(OmegaConf.to_yaml(res))
     client = Minio(
         "minio.airflow.svc.cluster.local:9000",
