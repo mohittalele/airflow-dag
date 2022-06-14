@@ -1,0 +1,5 @@
+minio==7.1.8
+omegaconf==2.2.2
+opencv-python==4.5.5.64
+pika==1.2.1
+hydra-core==1.2.0
