@@ -4,3 +4,5 @@ opencv-contrib-python-headless==4.5.5.64
 pika==1.2.1
 hydra-core==1.2.0
 tqdm==4.64.0
+pillow==8.3.1
+facenet-pytorch==2.5.2
