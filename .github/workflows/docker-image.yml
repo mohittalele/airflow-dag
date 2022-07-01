@@ -26,9 +26,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
-        name: Build and push
+        #TODO build from source code from the apache airflow
+        name: Build and push Airflow
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags:  mohittalele/airflow:2.2.4v7
+          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/airflow:2.2.4v7
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile1
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ubuntu-util:20.04v1
