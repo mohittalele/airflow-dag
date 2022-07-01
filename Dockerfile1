@@ -1,10 +1,9 @@
 FROM ubuntu:20.04
-RUN python -m ensurepip --upgrade
 RUN apt-get update && apt-get install -y \
     git \
     vim \
-    pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --requirement /tmp/requirements.txt && \
-    pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113 && \
     && rm -rf /var/lib/apt/lists/* 
+RUN pip install --no-cache-dir --upgrade pip  \
+    pip install --no-cache-dir --requirement /tmp/requirements.txt  \
+    pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu  \
+    pip install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113  \
