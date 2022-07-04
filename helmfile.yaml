@@ -32,12 +32,29 @@ releases:
           gitSync:
             enabled: true
             repo: https://github.com/mohittalele/airflow-dag.git
-            branch: feature/simulate-vanilla-workflow
+            branch: feature/remove-top-level-code
             subPath: DAG
+            credentialsSecret: git-credentials
         logs:
           persistence:
             enabled: true
             size: 10Gi
+
+  - name: airflow-git-credentials
+    labels:
+      app: airflow-git-credentials
+    chart: incubator/raw
+    namespace: airflow
+    values:
+      - resources:
+          - apiVersion: v1
+            kind: Secret
+            metadata:
+              name: git-credentials
+              namespace: airflow
+            data:
+              GIT_SYNC_USERNAME: {{ requiredEnv "GIT_USERNAME" | b64enc  }}
+              GIT_SYNC_PASSWORD: {{ requiredEnv "GIT_PASSWORD" | b64enc  }}
 
   - name: airflow-namespace                                            
     labels:                                  
