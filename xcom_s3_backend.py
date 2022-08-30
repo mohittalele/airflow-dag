@@ -41,7 +41,7 @@ class S3XComBackend(BaseXCom):
 
         if isinstance(result, str) and result.startswith(S3XComBackend.PREFIX):
             S3XComBackend._assert_s3_backend()
-            hook = S3Hook()
+            hook = S3Hook(aws_conn_id=S3XComBackend.CONN_ID)
             key = result.replace(f"{S3XComBackend.PREFIX}://{S3XComBackend.BUCKET_NAME}/", "")
             filename = hook.download_file(
                 key=key,
