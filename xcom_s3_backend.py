@@ -8,7 +8,7 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
 
 class S3XComBackend(BaseXCom):
-    PREFIX = "xcom_s3"
+    PREFIX = "s3"
     BUCKET_NAME = os.environ.get("S3_XCOM_BUCKET_NAME")
     CONN_ID = os.environ.get("S3_XCOM_CONN_ID")
 
@@ -33,6 +33,23 @@ class S3XComBackend(BaseXCom):
             )
             value = f"{S3XComBackend.PREFIX}://{S3XComBackend.BUCKET_NAME}/{key}"
 
+        elif isinstance(value, dict) and all(isinstance(x, pd.DataFrame) for x in value.values()):
+            S3XComBackend._assert_s3_backend()
+            hook = S3Hook(aws_conn_id=S3XComBackend.CONN_ID)
+            stripped_dict = {}
+            for df_key, df_value in value.items():
+                key = f"data_{str(uuid.uuid4())}.csv"
+                filename = f"{key}.csv"
+                df_value.to_csv(filename, index=False)
+                hook.load_file(
+                    filename=filename,
+                    key=key,
+                    bucket_name=S3XComBackend.BUCKET_NAME,
+                    replace=True
+                )
+                stripped_dict[df_key] = f"{S3XComBackend.PREFIX}://{S3XComBackend.BUCKET_NAME}/{key}"
+            value = stripped_dict
+
         return BaseXCom.serialize_value(value)
 
     @staticmethod
@@ -49,5 +66,17 @@ class S3XComBackend(BaseXCom):
                 local_path="/tmp"
             )
             result = pd.read_csv(filename)
-
+        elif isinstance(result, dict) and all(x.startswith(S3XComBackend.PREFIX) for x in result.values()):
+            S3XComBackend._assert_s3_backend()
+            hook = S3Hook(aws_conn_id=S3XComBackend.CONN_ID)
+            loaded_dict = {}
+            for df_key, df_value in result.items():
+                key = df_value.replace(f"{S3XComBackend.PREFIX}://{S3XComBackend.BUCKET_NAME}/", "")
+                filename = hook.download_file(
+                    key=key,
+                    bucket_name=S3XComBackend.BUCKET_NAME,
+                    local_path="/tmp"
+                )
+                loaded_dict[df_key] = pd.read_csv(filename)
+            result = loaded_dict
         return result
