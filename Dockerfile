@@ -5,5 +5,4 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --requirement /tmp/requirements.txt && \
     pip install --no-cache-dir mlflow[extras] &&\
     pip install --no-cache-dir astro-sdk-python[amazon,google,snowflake,postgres] &&\
-    pip install --no-cache-dir torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
+    pip install --no-cache-dir torch==1.10.0+cpu torchvision==0.11.0+cpu torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
