@@ -5,6 +5,7 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools 
 RUN apk add vim \
     git 
+USER root
 COPY requirements.txt /tmp/
 RUN python3 -m pip install --upgrade pip  \
     pip install --no-cache-dir --requirement /tmp/requirements.txt  \
