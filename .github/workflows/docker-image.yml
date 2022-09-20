@@ -32,7 +32,7 @@ jobs:
         with:
           context: .
           push: true
-          tags:  ${{ secrets.DOCKERHUB_USERNAME }}/airflow:2.3.3v10
+          tags:  ${{ secrets.DOCKERHUB_USERNAME }}/airflow:2.3.3v11
 
       - name: Build and push
         id: docker_build
@@ -41,4 +41,4 @@ jobs:
           context: ./
           file: ./Dockerfile1
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/alpine-util:0.1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/alpine-util:0.2
