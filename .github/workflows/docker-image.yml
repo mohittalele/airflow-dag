@@ -25,14 +25,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      # -
-      #   #TODO build from source code from the apache airflow
-      #   name: Build and push Airflow
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags:  ${{ secrets.DOCKERHUB_USERNAME }}/airflow:2.3.4v1
+      -
+        #TODO build from source code from the apache airflow
+        name: Build and push Airflow
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags:  ${{ secrets.DOCKERHUB_USERNAME }}/airflow:2.4.0v1
 
       # - name: Build and push
       #   id: docker_build
@@ -43,11 +43,11 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/alpine-util:0.2
 
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.essentia
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/essentia:v1
+      # - name: Build and push
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.essentia
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/essentia:v1
