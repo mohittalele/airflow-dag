@@ -1,4 +1,4 @@
-FROM apache/airflow:2.4.0
+FROM apache/airflow:2.4.1
 COPY requirements.txt /tmp/
 COPY xcom_s3_backend.py /opt/airflow/config/
 USER airflow
