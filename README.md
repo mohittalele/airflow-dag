@@ -17,10 +17,7 @@
 # Deploy helm charts
 ``` helmfile apply ``` 
 
-# minikube VPN setting - Not successful 
-set HTTP_PROXY=<proxy URL>
-set HTTPS_PROXY=<proxy URL>
-set NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.59.0/24,192.168.39.0/24
+
 
 # Mount local file folder on to Minikube 
 while testing you might want to mount the local folders to the minikube pods. To mount the local folder run this command :
@@ -32,36 +29,13 @@ while testing you might want to mount the local folders to the minikube pods. To
 
 
 
-# Advanced Templating
+# Further Notes 
 
 
-```
-from airflow.models import DAG
-from airflow.operators.bash_operator import BashOperator
-from datetime import datetime
-
-filelist = [f'file{x}.txt' for x in range(30)]
-
-default_args = {
-  'start_date': datetime(2020, 4, 15),
-}
-
-cleandata_dag = DAG('cleandata',
-                    default_args=default_args,
-                    schedule_interval='@daily')
-
-
-templated_command = """
-  <% for filename in params.filenames %>
-  bash cleandata.sh {{ ds_nodash }} {{ filename }};
-  <% endfor %>
-"""
-
-clean_task = BashOperator(task_id='cleandata_task',
-                          bash_command=templated_command,
-                          params={'filenames': filelist},
-                          dag=cleandata_dag)
-```
+minikube VPN setting - Not successful 
+set HTTP_PROXY=<proxy URL>
+set HTTPS_PROXY=<proxy URL>
+set NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.59.0/24,192.168.39.0/24
 
 # Building docer images 
 
