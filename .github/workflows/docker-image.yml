@@ -41,7 +41,7 @@ jobs:
           context: ./
           file: ./Dockerfile.cuda
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda11.3.1-torch1.12:0.1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12:0.1
 
       # - name: Build and push
       #   id: docker_build
