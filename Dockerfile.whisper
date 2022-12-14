@@ -7,5 +7,5 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* 
 RUN python3 -m pip install --upgrade pip  \
     pip install git+https://github.com/openai/whisper.git@eff383b27b783e280c089475852ba83f20f64998 \
-    pip install pytube omegaconf
+    pip install pytube omegaconf \
     pip install --no-cache-dir torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
