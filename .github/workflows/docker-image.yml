@@ -59,4 +59,4 @@ jobs:
           context: ./
           file: ./Dockerfile.whisper
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.2
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.3
