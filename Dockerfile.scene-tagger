@@ -1,0 +1,10 @@
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
+RUN apt-get update && apt-get install -y \
+    git \
+    python3-pip \
+    ffmpeg \ 
+    wget \
+    && rm -rf /var/lib/apt/lists/* 
+RUN python3 -m pip install --upgrade pip  \
+    pip3 install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116 \
+    pip3 install tqdm mmcv==1.1.1 gdown pytube protobuf==3.20.1 tensorboardX==2.1
