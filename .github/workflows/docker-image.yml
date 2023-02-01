@@ -68,4 +68,4 @@ jobs:
           context: ./
           file: ./Dockerfile.scene-tagger
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia/cuda:11.8.0-devel-ubuntu22.04-scene-tagger:0.1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-scene-tagger:0.1
