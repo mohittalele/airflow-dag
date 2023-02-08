@@ -77,4 +77,4 @@ jobs:
           context: ./
           file: ./Dockerfile.movienet_tools
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-movie-net-tools:0.1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-movie-net-tools:0.2

@@ -14,8 +14,8 @@ RUN pip3 install --no-cache-dir --upgrade pip \
  && pip3 install setuptools \
  && pip3 install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html \
  && pip3 install --no-cache-dir -r requirements.txt \ 
- && python3 setup.py develop 
-#  && python3 scripts/download_models.py
+ && python3 setup.py develop \
+ && python3 scripts/download_models.py
 
 # This number needs to be adjusted according to your GPU
 # https://developer.nvidia.com/cuda-gpus
