@@ -7,6 +7,8 @@ RUN cd /opt \
 
 WORKDIR /opt/movienet-tools/
 
+ARG TORCH_CUDA_ARCH_LIST="5.2+PTX"
+
 RUN pip3 install --no-cache-dir --upgrade pip \
  && pip3 install wheel \
  && pip3 install setuptools \
