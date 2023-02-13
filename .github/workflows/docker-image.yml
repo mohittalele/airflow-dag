@@ -70,14 +70,14 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-scene-tagger:0.1
 
-      - name: Build and push movie-net
-        id: docker_build_movie_net
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.movienet_tools
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-movie-net-tools:0.2
+      # - name: Build and push movie-net
+      #   id: docker_build_movie_net
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.movienet_tools
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-movie-net-tools:0.2
 
       - name: Build and push mmaction2
         id: docker_mmaction2
