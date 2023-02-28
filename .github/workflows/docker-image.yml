@@ -71,7 +71,7 @@ jobs:
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-scene-tagger:0.1
 
       - name: Build and push scene-tagger vy1.0
-        id: docker_build_scene_tagger_vy1.0
+        id: docker_build_scene_tagger_vy1
         uses: docker/build-push-action@v2
         with:
           context: ./
