@@ -1,0 +1,41 @@
+name: Build and Push Whisper Docker Image
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/remove-top-level-code'
+
+env:
+  DOCKER_USERNAME:  ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  IMAGE_NAME:  ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper
+  IMAGE_TAG: 0.3
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if Docker image exists
+        run: |
+          set -e
+          curl --head --fail https://hub.docker.com/v2/repositories/${DOCKER_USERNAME}/${IMAGE_NAME}/tags/${IMAGE_TAG}/ >/dev/null 2>&1
+          if [ $? -eq 0 ]; then
+            echo "Docker image exists, skipping build and push."
+            exit 0
+          else
+            echo "Docker image does not exist, continuing with build and push."
+            exit 1
+          fi
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.whisper
+          push: true
+          tags: ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          build_args: |
+            IMAGE_NAME=${IMAGE_NAME}
+            IMAGE_TAG=${IMAGE_TAG}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
