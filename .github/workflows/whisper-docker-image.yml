@@ -7,9 +7,9 @@ on:
       - 'feature/remove-top-level-code'
 
 env:
-  DOCKER_USERNAME:  ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-  IMAGE_NAME:  ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper
+  DOCKERHUB_USERNAME:  ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  IMAGE_NAME:  ubuntu20.04-cuda-base11.3.1-torch1.12-whisper
   IMAGE_TAG: 0.3
 
 jobs:
@@ -22,12 +22,13 @@ jobs:
         id: docker-image-check
         run: |
           set -e
-          curl --head --fail https://hub.docker.com/v2/repositories/${DOCKER_USERNAME}/${IMAGE_NAME}/tags/${IMAGE_TAG}/ >/dev/null 2>&1
+          curl --head --fail https://hub.docker.com/v2/repositories/${DOCKERHUB_USERNAME}/${IMAGE_NAME}/tags/${IMAGE_TAG}/ >/dev/null 2>&1
           if [ $? -eq 0 ]; then
             echo "::set-output name=docker-image-exists::true"
           else
             echo "::set-output name=docker-image-exists::false"
           fi
+
   build-and-push:
     needs: check-docker-image
     runs-on: ubuntu-latest
@@ -54,4 +55,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          tags: ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
