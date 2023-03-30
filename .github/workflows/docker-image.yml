@@ -52,14 +52,14 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/essentia:v1
       
-      # - name: Build and push whisper
-      #   id: docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ./
-      #     file: ./Dockerfile.whisper
-      #     push: true
-      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.3
+      - name: Build and push whisper
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile.whisper
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.4
 
       # - name: Build and push scene-tagger
       #   id: docker_build
@@ -70,29 +70,29 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-scene-tagger:0.1
 
-      - name: Build and push scene-tagger vy1.0
-        id: docker_build_scene_tagger_vy1
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.scene-tagger-vy1.0
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ffmpeg-scene-tagger-vy1.0:0.1
+      # - name: Build and push scene-tagger vy1.0
+      #   id: docker_build_scene_tagger_vy1
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.scene-tagger-vy1.0
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/ffmpeg-scene-tagger-vy1.0:0.1
 
-      - name: Build and push movie-net
-        id: docker_build_movie_net
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.movienet_tools
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-movie-net-tools:0.3
+      # - name: Build and push movie-net
+      #   id: docker_build_movie_net
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.movienet_tools
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-movie-net-tools:0.3
 
-      - name: Build and push mmaction2
-        id: docker_mmaction2
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.mmaction2
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-mmaction2:0.1
+      # - name: Build and push mmaction2
+      #   id: docker_mmaction2
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.mmaction2
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-mmaction2:0.1
