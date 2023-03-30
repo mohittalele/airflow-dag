@@ -7,35 +7,51 @@ on:
       - 'feature/remove-top-level-code'
 
 env:
-  DOCKER_USERNAME:  ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_USERNAME:  ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
   IMAGE_NAME:  ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper
   IMAGE_TAG: 0.3
 
 jobs:
-  build-and-push:
+  check-docker-image:
     runs-on: ubuntu-latest
+    outputs:
+      docker-image-exists: ${{ steps.docker-image-check.outputs.docker-image-exists }}
     steps:
       - name: Check if Docker image exists
+        id: docker-image-check
         run: |
           set -e
           curl --head --fail https://hub.docker.com/v2/repositories/${DOCKER_USERNAME}/${IMAGE_NAME}/tags/${IMAGE_TAG}/ >/dev/null 2>&1
           if [ $? -eq 0 ]; then
-            echo "Docker image exists, skipping build and push."
-            exit 0
+            echo "::set-output name=docker-image-exists::true"
           else
-            echo "Docker image does not exist, continuing with build and push."
-            exit 1
+            echo "::set-output name=docker-image-exists::false"
           fi
-      - name: Build and push Docker image
+  build-and-push:
+    needs: check-docker-image
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-docker-image.outputs.docker-image-exists == 'true' }}
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.whisper
           push: true
           tags: ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
-          build_args: |
-            IMAGE_NAME=${IMAGE_NAME}
-            IMAGE_TAG=${IMAGE_TAG}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
