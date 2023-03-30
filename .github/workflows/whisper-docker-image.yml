@@ -7,32 +7,26 @@ on:
       - 'feature/remove-top-level-code'
 
 env:
-  DOCKERHUB_USERNAME:  ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  IMAGE_NAME:  ubuntu20.04-cuda-base11.3.1-torch1.12-whisper
+  IMAGE_NAME: ubuntu20.04-cuda-base11.3.1-torch1.12-whisper
   IMAGE_TAG: 0.3
+  DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
   check-docker-image:
     runs-on: ubuntu-latest
-    outputs:
-      docker-image-exists: ${{ steps.docker-image-check.outputs.docker-image-exists }}
     steps:
       - name: Check if Docker image exists
-        id: docker-image-check
         run: |
-          set -e
-          curl --head --fail https://hub.docker.com/v2/repositories/${DOCKERHUB_USERNAME}/${IMAGE_NAME}/tags/${IMAGE_TAG}/ >/dev/null 2>&1
-          if [ $? -eq 0 ]; then
-            echo "::set-output name=docker-image-exists::true"
-          else
-            echo "::set-output name=docker-image-exists::false"
-          fi
+          image_exists=$(curl -sSf https://hub.docker.com/v2/repositories/${DOCKER_USERNAME}/${IMAGE_NAME}/tags/${IMAGE_TAG} | jq -r '.name')
+          echo "image_exists=$([ "$image_exists" = "$IMAGE_TAG" ] && echo true || echo false)" > $GITHUB_ENV
+      - name: Display output
+        run: echo $image_exists
 
   build-and-push:
-    needs: check-docker-image
     runs-on: ubuntu-latest
-    if: ${{ needs.check-docker-image.outputs.docker-image-exists == 'true' }}
+    needs: check-docker-image
+    if: env.image_exists == 'true'
     steps:
       -
         name: Checkout
@@ -50,9 +44,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: ./Dockerfile.whisper 
           push: true
-          tags: ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          tags: ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
