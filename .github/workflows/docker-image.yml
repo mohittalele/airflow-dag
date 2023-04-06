@@ -25,14 +25,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        #TODO build from source code from the apache airflow
-        name: Build and push Airflow
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags:  ${{ secrets.DOCKERHUB_USERNAME }}/airflow:2.5.0v1
+      # -
+      #   #TODO build from source code from the apache airflow
+      #   name: Build and push Airflow
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: .
+      #     push: true
+      #     tags:  ${{ secrets.DOCKERHUB_USERNAME }}/airflow:2.5.0v1
 
       # - name: Build and push Dockerfile.cuda
       #   id: docker_build
@@ -52,14 +52,14 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/essentia:v1
       
-      # - name: Build and push whisper
-      #   id: docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ./
-      #     file: ./Dockerfile.whisper
-      #     push: true
-      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.5
+      - name: Build and push whisper
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile.whisper
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.6
 
       # - name: Build and push scene-tagger
       #   id: docker_build
