@@ -61,14 +61,14 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu20.04-cuda-base11.3.1-torch1.12-whisper:0.6
 
-      - name: Build and push scene-tagger
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.scene-tagger
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-scene-tagger:0.2
+      # - name: Build and push scene-tagger
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.scene-tagger
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-scene-tagger:0.2
 
       # - name: Build and push scene-tagger vy1.0
       #   id: docker_build_scene_tagger_vy1
@@ -96,3 +96,12 @@ jobs:
       #     file: ./Dockerfile.mmaction2
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-mmaction2:0.1
+      
+      - name: Build and push sentence-transformers
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile.sentence_transformer
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-sentence_transformer:0.1
