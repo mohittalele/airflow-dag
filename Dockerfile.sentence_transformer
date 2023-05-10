@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN python3 -m pip install --upgrade pip  \ 
     && pip3 install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116 \
     && pip3 install tqdm mmcv==1.1.1 gdown pytube protobuf==3.20.1 tensorboardX==2.1 scikit-learn==0.24.2 \
-    && pip3 install --no-cache-dir spacy sentence-transformers 
+    && pip3 install --no-cache-dir spacy sentence-transformers pandas omegaconf 
 RUN python3 -m spacy download de_core_news_md
 RUN git clone https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2  ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2 
 
