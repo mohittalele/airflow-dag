@@ -104,4 +104,4 @@ jobs:
           context: ./
           file: ./Dockerfile.sentence_transformer
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-sentence_transformer:0.3
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-sentence_transformer:0.4
