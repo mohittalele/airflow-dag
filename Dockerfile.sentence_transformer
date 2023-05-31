@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     ffmpeg \ 
     wget \
+    tzdata \
     && rm -rf /var/lib/apt/lists/* 
 RUN python3 -m pip install --upgrade pip  \ 
     && pip3 install --no-cache-dir torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116 \
