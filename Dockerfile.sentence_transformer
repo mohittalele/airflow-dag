@@ -13,6 +13,11 @@ RUN python3 -m pip install --upgrade pip  \
     && pip3 install tqdm mmcv==1.1.1 gdown pytube protobuf==3.20.1 tensorboardX==2.1 scikit-learn==0.24.2 \
     && pip3 install --no-cache-dir spacy sentence-transformers pandas omegaconf pyarrow==12.0.0 ndjson==0.3.1
 RUN python3 -m spacy download de_core_news_md
-RUN git clone https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2  ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2 
+RUN git clone https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2  ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2 \
+    && wget -O ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2/tf_model.h5 https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/tf_model.h5 \
+    && wget -O ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2/pytorch_model.bin https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/pytorch_model.bin \
+    && wget -O ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2/unigram.json https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/unigram.json \
+    && wget -O ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2/tokenizer.json https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/tokenizer.json \
+    && wget -O ~/.cache/torch/sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2/sentencepiece.bpe.model https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/sentencepiece.bpe.model
 
 
