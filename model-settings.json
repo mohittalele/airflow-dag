@@ -1,0 +1,10 @@
+{
+    "name": "transformer",
+    "implementation": "mlserver_huggingface.HuggingFaceRuntime",
+    "parameters": {
+        "extra": {
+            "task": "text-generation",
+            "pretrained_model": "distilgpt2"
+        }
+    }
+}

@@ -1,0 +1,4 @@
+FROM seldonio/mlserver:1.3.3-huggingface
+COPY model-settings.json /tmp/
+WORKDIR /tmp/
+CMD ["mlserver", "start", "."]
