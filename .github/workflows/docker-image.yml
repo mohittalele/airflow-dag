@@ -97,14 +97,14 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-10.2-devel-ubuntu18.04-mmaction2:0.1
       
-      - name: Build and push sentence-transformers
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile.sentence_transformer
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-sentence_transformer:0.7
+      # - name: Build and push sentence-transformers
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile.sentence_transformer
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-sentence_transformer:0.7
 
       - name: Build and push sentence-transformers-mlserver
         id: docker_build_push_mlserver
@@ -113,4 +113,4 @@ jobs:
           context: ./
           file: ./sentence-transformer-mlsever/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvidia-cuda-11.8.0-devel-ubuntu22.04-sentence_transformer:0.7
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sentence_transformer_mlserver:0.7
